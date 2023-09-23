@@ -14,6 +14,22 @@ model User{
   id Int @default(autoincrement()) @id
   name String
   email String @unique
-  is_registered Boolean @default(false)
-  is_email_regester  String
+  password String
+  hasVerification Boolean @default(false)
+  balance Decimal @default(0)
+  accountCategory String
+  createAt DateTime @default(now())
+}
+
+model Subcategory{
+  id Int @default(autoincrement()) @id
+  submane String
+  category Category? @relation(fields: [categoryId],references: [id])
+  categoryId Int?
+}
+
+model Category{
+  id Int @default(autoincrement()) @id
+  name String
+  subcategories Subcategory[]
 }

@@ -1,4 +1,15 @@
-import {BadRequestException, Body, Controller, Get, Post, Req, Res, UnauthorizedException} from "@nestjs/common";
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Get,
+    Param,
+    Post,
+    Put,
+    Req,
+    Res,
+    UnauthorizedException
+} from "@nestjs/common";
 import {UserService} from "../user/user.service";
 import * as bcrypt from 'bcrypt';
 import {JwtService} from "@nestjs/jwt";
@@ -19,7 +30,7 @@ export class AuthController{
         @Body('account_category') account_category : string,
     ){
         const hashedPassword = await bcrypt.hash(password, 12);
-
+        await this.userService.sendEmail(email);
         // @ts-ignore
         return this.userService.register({
             accountCategory: account_category,
@@ -45,11 +56,25 @@ export class AuthController{
         if(!await bcrypt.compare(password, user.password)){
             throw new BadRequestException('Password is not equals');
         }
-
+        if(!user.hasVerification){
+            throw new BadRequestException('Email is not verification');
+        }
         const jwt = await this.jwtService.signAsync({id: user.id});
         responce.cookie('jwt', jwt, {httpOnly:true});
 
         return user;
+    }
+
+    @Get('/verification/:email')
+    async verification(@Param('email') email: string){
+
+        await this.userService.updateUser({
+            where: {email: String(email)},
+            data: {hasVerification: true}
+        })
+        return {
+            message : "This email is activated now!"
+        }
     }
 
     @Get('/user')
@@ -67,8 +92,8 @@ export class AuthController{
     }
 
     @Post('/logout')
-    async logout(@Res({passthrough: true}) responce : Response){
-        responce.clearCookie('jwt');
+    async logout(@Res({passthrough: true}) response : Response){
+        response.clearCookie('jwt');
         return{
             message : 'success'
         }

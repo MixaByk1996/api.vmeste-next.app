@@ -1,11 +1,15 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../../prisma/prisma.service";
 import {Prisma, User} from "@prisma/client";
+import {MailerService} from "@nestjs-modules/mailer";
 
 // @ts-ignore
 @Injectable()
 export class UserService {
-    constructor(private readonly prisma: PrismaService) {
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly mailerService: MailerService
+    ) {
     }
 
     // @ts-ignore
@@ -24,9 +28,27 @@ export class UserService {
         })
     }
 
+    async sendEmail(email : string){
+        this.mailerService.sendMail({
+            to: email,
+            from: 'app.vmeste-mail@mail.ru',
+            subject: 'Верификация аккаунта',
+            text: 'Добро пожаловать',
+            html: "<b>Подтвердите пожалуйста почту. <a href='http://localhost:3000/auth/verification/'>Подтвердить</a></b>"
+        })
+    }
     //async login()
 
-
+    async updateUser(params: {
+        where: Prisma.UserWhereUniqueInput;
+        data: Prisma.UserUpdateInput;
+    }): Promise<User> {
+        const { data, where } = params;
+        return this.prisma.user.update({
+            data,
+            where,
+        });
+    }
     async users(params: {
         skip?: number;
         take?: number;

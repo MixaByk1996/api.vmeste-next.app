@@ -31,5 +31,44 @@ model Subcategory{
 model Category{
   id Int @default(autoincrement()) @id
   name String
+  applications Application[]
   subcategories Subcategory[]
+}
+
+model Application{
+  id BigInt @default(autoincrement()) @id
+  name String
+  photo_url String
+  category Category? @relation(fields: [categoryId],references: [id])
+  categoryId Int?
+  city City? @relation(fields: [cityId], references: [id])
+  cityId Int?
+  min_amount Float @default(0.0)
+  realization_period String
+  comission Float @default(0.0)
+  status String
+  tags String
+  description String
+  createAt DateTime @default(now())
+  //добавить event(ивенты)!!!!!!
+}
+
+model Event{
+  id Int @default(autoincrement()) @id
+  name String
+
+}
+
+model City{
+  id Int @id
+  name String
+  applications Application[]
+  country Country? @relation(fields: [countryId], references: [id])
+  countryId Int?
+}
+
+model Country{
+  id Int @id
+  name String
+  cities City[]
 }

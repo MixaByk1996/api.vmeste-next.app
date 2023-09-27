@@ -19,6 +19,8 @@ model User{
   balance Decimal @default(0)
   accountCategory String
   createAt DateTime @default(now())
+  //creaters Application[]
+  applications UsersOnApplications[]
 }
 
 model Subcategory{
@@ -38,25 +40,39 @@ model Category{
 model Application{
   id BigInt @default(autoincrement()) @id
   name String
+  //creater User @relation(fields: [createrId], references: [id])
+  //createrId Int
   photo_url String
   category Category? @relation(fields: [categoryId],references: [id])
   categoryId Int?
   city City? @relation(fields: [cityId], references: [id])
   cityId Int?
   min_amount Float @default(0.0)
-  realization_period String
+  realization_period DateTime
   comission Float @default(0.0)
   status String
   tags String
   description String
   createAt DateTime @default(now())
-  //добавить event(ивенты)!!!!!!
+  events Event[]
+  users UsersOnApplications[]
 }
 
 model Event{
-  id Int @default(autoincrement()) @id
+  id BigInt @default(autoincrement()) @id
   name String
+  createdAt DateTime @default(now())
+  application Application? @relation(fields: [applicationId], references: [id])
+  applicationId BigInt?
+}
 
+model UsersOnApplications{
+    user User @relation(fields: [userId], references: [id])
+    userId Int
+    application Application @relation(fields: [applicationId], references: [id])
+    applicationId BigInt
+    assignedAt DateTime @default(now())
+  @@id([userId,applicationId])
 }
 
 model City{
@@ -72,3 +88,4 @@ model Country{
   name String
   cities City[]
 }
+

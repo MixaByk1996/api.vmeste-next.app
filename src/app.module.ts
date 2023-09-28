@@ -5,10 +5,12 @@ import {PrismaService} from "../prisma/prisma.service";
 import {AuthController} from "./auth/auth.controller";
 import {AuthModule} from "./auth/auth.module";
 import {MailerModule} from "@nestjs-modules/mailer";
+import {CityModule} from "./city/city.module";
 
 @Module({
   imports: [
       AuthModule,
+      CityModule,
       MailerModule.forRoot({
         transport:{
           host: 'smtp.mail.ru',

@@ -19,7 +19,7 @@ model User{
   balance Decimal @default(0)
   accountCategory String
   createAt DateTime @default(now())
-  //creaters Application[]
+  creater Application[]
   applications UsersOnApplications[]
 }
 
@@ -40,13 +40,14 @@ model Category{
 model Application{
   id BigInt @default(autoincrement()) @id
   name String
-  //creater User @relation(fields: [createrId], references: [id])
-  //createrId Int
+  creater User? @relation(fields: [createrId], references: [id])
+  createrId Int?
   photo_url String
   category Category? @relation(fields: [categoryId],references: [id])
   categoryId Int?
-  city City? @relation(fields: [cityId], references: [id])
-  cityId Int?
+  city_name String
+  // city City? @relation(fields: [cityId], references: [id])
+  // cityId Int?
   min_amount Float @default(0.0)
   realization_period DateTime
   comission Float @default(0.0)
@@ -75,17 +76,17 @@ model UsersOnApplications{
   @@id([userId,applicationId])
 }
 
-model City{
-  id Int @id
-  name String
-  applications Application[]
-  country Country? @relation(fields: [countryId], references: [id])
-  countryId Int?
-}
-
-model Country{
-  id Int @id
-  name String
-  cities City[]
-}
+// model City{
+//   id Int @id
+//   name String
+//   applications Application[]
+//   country Country? @relation(fields: [countryId], references: [id])
+//   countryId Int?
+// }
+//
+// model Country{
+//   id Int @id
+//   name String
+//   cities City[]
+// }
 

@@ -46,7 +46,7 @@ export class AuthController{
     async login(
         @Body('email') email : string,
         @Body('password') password : string,
-        @Res({passthrough: true}) responce: Response
+        @Res({passthrough: true}) response: Response
     ){
         const user = await this.userService.findUser({email});
         if(!user){
@@ -60,7 +60,7 @@ export class AuthController{
             throw new BadRequestException('Email is not verification');
         }
         const jwt = await this.jwtService.signAsync({id: user.id});
-        responce.cookie('jwt', jwt, {httpOnly:true});
+        response.cookie('jwt', jwt, {httpOnly:true});
 
         return user;
     }

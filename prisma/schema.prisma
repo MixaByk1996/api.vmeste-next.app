@@ -15,11 +15,12 @@ model User{
   name String
   email String @unique
   password String
+  photo_url String //base64
+  accountCategory String
   hasVerification Boolean @default(false)
   balance Decimal @default(0)
-  accountCategory String
   createAt DateTime @default(now())
-  creater Application[]
+  creater Applications[]
   applications UsersOnApplications[]
 }
 
@@ -33,27 +34,26 @@ model Subcategory{
 model Category{
   id Int @default(autoincrement()) @id
   name String
-  applications Application[]
+  applications Applications[]
   subcategories Subcategory[]
 }
 
-model Application{
+model Applications{
   id BigInt @default(autoincrement()) @id
   name String
-  creater User? @relation(fields: [createrId], references: [id])
-  createrId Int?
-  photo_url String
-  category Category? @relation(fields: [categoryId],references: [id])
-  categoryId Int?
   city_name String
-  // city City? @relation(fields: [cityId], references: [id])
-  // cityId Int?
-  min_amount Float @default(0.0)
   realization_period DateTime
-  comission Float @default(0.0)
   status String
   tags String
   description String
+  photo_url String //base64
+  country_name String @default("Россия")
+  creater User? @relation(fields: [createrId], references: [id])
+  createrId Int?
+  category Category? @relation(fields: [categoryId],references: [id])
+  categoryId Int?
+  min_amount Float @default(0.0)
+  comission Float @default(0.0)
   createAt DateTime @default(now())
   events Event[]
   users UsersOnApplications[]
@@ -63,14 +63,14 @@ model Event{
   id BigInt @default(autoincrement()) @id
   name String
   createdAt DateTime @default(now())
-  application Application? @relation(fields: [applicationId], references: [id])
+  application Applications? @relation(fields: [applicationId], references: [id])
   applicationId BigInt?
 }
 
 model UsersOnApplications{
     user User @relation(fields: [userId], references: [id])
     userId Int
-    application Application @relation(fields: [applicationId], references: [id])
+    application Applications @relation(fields: [applicationId], references: [id])
     applicationId BigInt
     assignedAt DateTime @default(now())
   @@id([userId,applicationId])

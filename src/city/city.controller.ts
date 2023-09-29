@@ -1,14 +1,14 @@
 import {Controller, Get} from "@nestjs/common";
 import fs = require('fs');
+import * as path from 'path';
+import * as process from 'process';
 
-@Controller()
+@Controller('/api')
 export class CityController{
     @Get('/cities')
     async getCity(){
-        // @ts-ignore
-        //read citites from json file(feature)
-        // const file_content = fs.readFile("../../other_data/rus_city.json");
-        // return file_content;
+        const text = fs.readFileSync(path.join(process.cwd(),'./other_data/rus_city.json'), 'utf-8').toString();
+        return JSON.parse(text);
     }
 
 }

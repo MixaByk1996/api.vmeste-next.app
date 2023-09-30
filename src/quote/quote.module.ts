@@ -4,10 +4,11 @@ import {UserService} from "../user/user.service";
 import {PrismaService} from "../../prisma/prisma.service";
 import {QuoteService} from "./quote.service";
 import {AuthModule} from "../auth/auth.module";
+import {JwtService} from "@nestjs/jwt";
 
 // @ts-ignore
 @Module({
     controllers: [QuoteController],
-    providers: [QuoteService, PrismaService]
+    providers: [QuoteService, PrismaService, JwtService, UserService]
 })
 export class QuoteModule{}

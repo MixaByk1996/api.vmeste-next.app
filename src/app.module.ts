@@ -24,7 +24,6 @@ import {QuoteModule} from "./quote/quote.module";
           },
           from: 'Test <app.vmeste-mail@mail.ru>'
         },
-
       })
   ],
   controllers: [AppController],

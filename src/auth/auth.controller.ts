@@ -15,7 +15,7 @@ import * as bcrypt from 'bcrypt';
 import {JwtService} from "@nestjs/jwt";
 import {Request, Response} from "express";
 
-@Controller('/auth')
+@Controller('/api/auth')
 export class AuthController{
     constructor(
         private readonly userService : UserService,
@@ -27,6 +27,8 @@ export class AuthController{
         @Body('name') name : string,
         @Body('email') email : string,
         @Body('password') password : string,
+        @Body('photo_url') photo_url : string,
+        @Body('hasVerification') hasVerification : boolean,
         @Body('account_category') account_category : string,
     ){
         const hashedPassword = await bcrypt.hash(password, 12);
@@ -36,6 +38,7 @@ export class AuthController{
             accountCategory: account_category,
             name,
            email,
+            photo_url,
            password : hashedPassword,
            hasVerification : false,
            balance : 0,

@@ -2,6 +2,7 @@ import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../../prisma/prisma.service";
 // @ts-ignore
 import {Prisma, Quote as QuoteModel} from '@prisma/client';
+
 @Injectable()
 export class QuoteService{
     constructor(private readonly prismaService: PrismaService) {}
@@ -11,6 +12,24 @@ export class QuoteService{
         return this.prismaService.quote.findMany({
             where: condition
         })
+    }
+
+    async createQuote(data: Prisma.QuoteCreateInput){
+        return this.prismaService.quote.create({
+             data,
+         });
+    }
+
+    async getCountQuotesByCurrentUser(id: number){
+        return this.prismaService.quote.count({
+            where: {
+                createrId: id
+            }
+        })
+    }
+
+    async quotes(){
+        return this.prismaService.quote.findMany();
     }
 
     async getAllQuotes(params: {

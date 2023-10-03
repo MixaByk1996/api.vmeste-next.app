@@ -14,6 +14,7 @@ import {UserService} from "../user/user.service";
 import * as bcrypt from 'bcrypt';
 import {JwtService} from "@nestjs/jwt";
 import {Request, Response} from "express";
+import {jwtConstants} from "./auth.constants";
 
 @Controller('/api/auth')
 export class AuthController{
@@ -22,23 +23,39 @@ export class AuthController{
         private jwtService : JwtService
     ) {}
 
+    @Post('/updateRole')
+    async updateRole(@Body('new_role') new_role: string, @Req() request: Request){
+        const cookie = request.cookies['jwt'];
+        const data = await this.jwtService.verifyAsync(cookie,{
+            secret: jwtConstants.secret
+        });
+        if(!data){
+            throw new UnauthorizedException();
+        }
+        return this.userService.updateUser({
+            where :{id : Number(data['id'])},
+            data : {role : new_role}
+        })
+    }
     @Post('/register')
     async register(
         @Body('name') name : string,
         @Body('email') email : string,
         @Body('password') password : string,
         @Body('photo_url') photo_url : string,
+        @Body('role') role : string,
         @Body('hasVerification') hasVerification : boolean,
         @Body('account_category') account_category : string,
     ){
         const hashedPassword = await bcrypt.hash(password, 12);
         await this.userService.sendEmail(email);
-        // @ts-ignore
+
         return this.userService.register({
             accountCategory: account_category,
             name,
            email,
             photo_url,
+            role,
            password : hashedPassword,
            hasVerification : false,
            balance : 0,
@@ -84,7 +101,9 @@ export class AuthController{
     async user(@Req() request: Request){
         try{
             const cookie = request.cookies['jwt'];
-            const data = await this.jwtService.verifyAsync(cookie);
+            const data = await this.jwtService.verifyAsync(cookie,{
+                secret: jwtConstants.secret
+            });
             if(!data){
                 throw new UnauthorizedException();
             }

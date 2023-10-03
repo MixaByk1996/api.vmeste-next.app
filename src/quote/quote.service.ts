@@ -1,7 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../../prisma/prisma.service";
 // @ts-ignore
-import {Prisma, Quote as QuoteModel} from '@prisma/client';
+import {Prisma, Quote, Quote as QuoteModel} from '@prisma/client';
 
 @Injectable()
 export class QuoteService{
@@ -17,6 +17,9 @@ export class QuoteService{
     async createQuote(data: Prisma.QuoteCreateInput){
         return this.prismaService.quote.create({
              data,
+            include:{
+                 category : true
+            }
          });
     }
 
@@ -25,6 +28,12 @@ export class QuoteService{
             where: {
                 createrId: id
             }
+        })
+    }
+
+    async getDetailsQuote(id : string){
+        return this.prismaService.quote.findFirst({
+            where : {id : Number(id)}
         })
     }
 
@@ -38,7 +47,7 @@ export class QuoteService{
         cursor?: Prisma.QuoteWhereUniqueInput;
         where?: Prisma.QuoteWhereInput;
         orderBy?: Prisma.QuoteOrderByWithRelationInput;
-    }) {
+    }):Promise<QuoteModel[]>  {
         const { skip, take, cursor, where, orderBy } = params;
         return this.prismaService.quote.findMany({
             skip,
@@ -46,6 +55,9 @@ export class QuoteService{
             cursor,
             where,
             orderBy,
+            include :{
+                category : true
+            }
         })
     }
 

@@ -17,6 +17,7 @@ model User{
   password String
   photo_url String //base64
   accountCategory String
+  role String
   hasVerification Boolean @default(false)
   balance Decimal @default(0)
   createAt DateTime @default(now())
@@ -39,7 +40,7 @@ model Category{
 }
 
 model Quote{
-  id BigInt @default(autoincrement()) @id
+  id Int @default(autoincrement()) @id
   name String
   city_name String
   realization_period DateTime
@@ -60,18 +61,18 @@ model Quote{
 }
 
 model Event{
-  id BigInt @default(autoincrement()) @id
+  id Int @default(autoincrement()) @id
   name String
   createdAt DateTime @default(now())
   quote Quote? @relation(fields: [quoteId], references: [id])
-  quoteId BigInt?
+  quoteId Int?
 }
 
 model UsersOnQuotes{
     user User @relation(fields: [userId], references: [id])
     userId Int
     quote Quote @relation(fields: [quoteId], references: [id])
-    quoteId BigInt
+    quoteId Int
     assignedAt DateTime @default(now())
   @@id([userId,quoteId])
 }

@@ -3,6 +3,9 @@ import { AppModule } from './app.module';
 import cookieParser from "cookie-parser";
 
 async function bootstrap() {
+  BigInt.prototype['toJSON'] = function () {
+    return parseInt(this.toString());
+  };
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser('secret'));
   app.enableCors({

@@ -14,6 +14,17 @@ export class QuoteService{
         })
     }
 
+    async getQuoteByNameOrDesc(value: string){
+        return this.prismaService.quote.findMany({
+            where: {
+                OR :[
+                    {name: {contains : value}},
+                    {description: {contains : value}},
+                ]
+            }
+        });
+    }
+
     async createQuote(data: Prisma.QuoteCreateInput){
         return this.prismaService.quote.create({
              data,
@@ -31,9 +42,21 @@ export class QuoteService{
         })
     }
 
+    async deleteUserByQuote(
+        where : Prisma.UsersOnQuotesWhereUniqueInput
+    ){
+        // @ts-ignore
+        return this.prismaService.usersOnQuotes.delete({
+           where
+        })
+    }
+
     async getDetailsQuote(id : string){
         return this.prismaService.quote.findFirst({
-            where : {id : Number(id)}
+            where : {id : Number(id)},
+            include: {
+                users: true
+            }
         })
     }
 

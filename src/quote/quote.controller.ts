@@ -20,8 +20,30 @@ export class QuoteController{
     async getAll(){
         return this.quoteService.quotes();
     }
-
-
+    @Post('/search')
+    async search(@Body('text') text : string){
+        return this.quoteService.getQuoteByNameOrDesc(text);
+    }
+    @Get('/exit-from-quote/:id_quote')
+    async exitFromQuote(@Param('id_quote') id : number, @Req() request : Request){
+        const cookie = request.cookies['jwt'];
+        if(!cookie){
+            throw new UnauthorizedException();
+        }
+        const data = await this.jwtService.verifyAsync(cookie,{
+            secret: jwtConstants.secret
+        });
+        if(!data){
+            throw new UnauthorizedException();
+        }
+        const user = await this.userService.findUser({id: data['id']})
+        return this.quoteService.deleteUserByQuote({
+            userId_quoteId: {
+                userId : user.id,
+                quoteId: id
+            }
+        })
+    }
 
     @Get('/get-details-quote/:id')
     async getFirstQuote(@Param('id') id : string){

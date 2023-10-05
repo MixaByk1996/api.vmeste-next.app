@@ -19,8 +19,9 @@ model User {
   accountCategory String
   role            String
   hasVerification Boolean         @default(false)
-  balance         Decimal         @default(0)
+  balance         Float           @default(0)
   createAt        DateTime        @default(now())
+  messages        Message[]
   createQuotes    Quote[]
   quotes          UsersOnQuotes[]
 }
@@ -57,6 +58,7 @@ model Quote {
   min_amount         Float           @default(0.0)
   comission          Float           @default(0.0)
   createAt           DateTime        @default(now())
+  messages           Message[]
   events             Event[]
   users              UsersOnQuotes[]
 }
@@ -88,6 +90,15 @@ model RequestApp {
   country       String    @default("Россия")
   category      Category? @relation(fields: [categoryId], references: [id])
   categoryId    Int?
+}
+
+model Message {
+  id        Int    @id @default(autoincrement())
+  text      String
+  creater   User?  @relation(fields: [createrId], references: [id])
+  createrId Int?
+  quote     Quote? @relation(references: [id], fields: [quoteId])
+  quoteId   Int?
 }
 
 // model City{

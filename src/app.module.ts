@@ -7,12 +7,14 @@ import {AuthModule} from "./auth/auth.module";
 import {MailerModule} from "@nestjs-modules/mailer";
 import {CityModule} from "./city/city.module";
 import {QuoteModule} from "./quote/quote.module";
+import {RequestappModule} from "./request_app/requestapp.module";
 
 @Module({
   imports: [
       AuthModule,
       CityModule,
       QuoteModule,
+      RequestappModule,
       MailerModule.forRoot({
         transport:{
           host: 'smtp.mail.ru',

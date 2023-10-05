@@ -10,71 +10,84 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id Int @default(autoincrement()) @id
-  name String
-  email String @unique
-  password String
-  photo_url String //base64
+model User {
+  id              Int             @id @default(autoincrement())
+  name            String
+  email           String          @unique
+  password        String
+  photo_url       String // base64
   accountCategory String
-  role String
-  hasVerification Boolean @default(false)
-  balance Decimal @default(0)
-  createAt DateTime @default(now())
-  createQuotes Quote[]
-  quotes UsersOnQuotes[]
+  role            String
+  hasVerification Boolean         @default(false)
+  balance         Decimal         @default(0)
+  createAt        DateTime        @default(now())
+  createQuotes    Quote[]
+  quotes          UsersOnQuotes[]
 }
 
-model Subcategory{
-  id Int @default(autoincrement()) @id
-  submane String
-  category Category? @relation(fields: [categoryId],references: [id])
+model Subcategory {
+  id         Int       @id @default(autoincrement())
+  submane    String
+  category   Category? @relation(fields: [categoryId], references: [id])
   categoryId Int?
 }
 
-model Category{
-  id Int @default(autoincrement()) @id
-  name String
-  quote Quote[]
+model Category {
+  id            Int           @id @default(autoincrement())
+  name          String
+  quote         Quote[]
   subcategories Subcategory[]
+  requests      RequestApp[]
 }
 
-model Quote{
-  id Int @default(autoincrement()) @id
-  name String
-  city_name String
+model Quote {
+  id                 Int             @id @default(autoincrement())
+  name               String
+  city_name          String
   realization_period DateTime
-  status String
-  tags String
-  description String
-  photo_url String //base64
-  country_name String @default("Россия")
-  creater User? @relation(fields: [createrId], references: [id])
-  createrId Int?
-  category Category? @relation(fields: [categoryId],references: [id])
-  categoryId Int?
-  min_amount Float @default(0.0)
-  comission Float @default(0.0)
-  createAt DateTime @default(now())
-  events Event[]
-  users UsersOnQuotes[]
+  status             String
+  tags               String
+  description        String
+  photo_url          String // base64
+  country_name       String          @default("Россия")
+  creater            User?           @relation(fields: [createrId], references: [id])
+  createrId          Int?
+  category           Category?       @relation(fields: [categoryId], references: [id])
+  categoryId         Int?
+  min_amount         Float           @default(0.0)
+  comission          Float           @default(0.0)
+  createAt           DateTime        @default(now())
+  events             Event[]
+  users              UsersOnQuotes[]
 }
 
-model Event{
-  id Int @default(autoincrement()) @id
-  name String
+model Event {
+  id        Int      @id @default(autoincrement())
+  name      String
   createdAt DateTime @default(now())
-  quote Quote? @relation(fields: [quoteId], references: [id])
-  quoteId Int?
+  quote     Quote?   @relation(fields: [quoteId], references: [id])
+  quoteId   Int?
 }
 
-model UsersOnQuotes{
-    user User @relation(fields: [userId], references: [id])
-    userId Int
-    quote Quote @relation(fields: [quoteId], references: [id])
-    quoteId Int
-    assignedAt DateTime @default(now())
-  @@id([userId,quoteId])
+model UsersOnQuotes {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  quote      Quote    @relation(fields: [quoteId], references: [id])
+  quoteId    Int
+  assignedAt DateTime @default(now())
+
+  @@id([userId, quoteId])
+}
+
+model RequestApp {
+  id            Int       @id @default(autoincrement())
+  name          String
+  countProducts Int
+  city          String
+  receiptPeriod DateTime
+  country       String    @default("Россия")
+  category      Category? @relation(fields: [categoryId], references: [id])
+  categoryId    Int?
 }
 
 // model City{
@@ -90,4 +103,3 @@ model UsersOnQuotes{
 //   name String
 //   cities City[]
 // }
-

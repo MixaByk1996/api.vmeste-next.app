@@ -54,6 +54,7 @@ model Quote {
   creater            User?           @relation(fields: [createrId], references: [id])
   createrId          Int?
   category           Category?       @relation(fields: [categoryId], references: [id])
+  countStar          Int?
   categoryId         Int?
   min_amount         Float           @default(0.0)
   comission          Float           @default(0.0)

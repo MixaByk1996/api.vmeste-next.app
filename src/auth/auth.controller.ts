@@ -16,14 +16,14 @@ import {JwtService} from "@nestjs/jwt";
 import {Request, Response} from "express";
 import {jwtConstants} from "./auth.constants";
 
-@Controller('/api/auth')
+@Controller()
 export class AuthController{
     constructor(
         private readonly userService : UserService,
         private jwtService : JwtService
     ) {}
 
-    @Post('/updateRole')
+    @Post('/api/auth/updateRole')
     async updateRole(@Body('new_role') new_role: string, @Req() request: Request){
         const cookie = request.cookies['jwt'];
         const data = await this.jwtService.verifyAsync(cookie,{
@@ -37,7 +37,7 @@ export class AuthController{
             data : {role : new_role}
         })
     }
-    @Post('/register')
+    @Post('/api/auth/register')
     async register(
         @Body('name') name : string,
         @Body('email') email : string,
@@ -85,7 +85,7 @@ export class AuthController{
         return user;
     }
 
-    @Get('/verification/:email')
+    @Get('/api/auth/verification/:email')
     async verification(@Param('email') email: string){
 
         await this.userService.updateUser({
@@ -97,7 +97,7 @@ export class AuthController{
         }
     }
 
-    @Get('/user')
+    @Get('/api/auth/user')
     async user(@Req() request: Request){
         try{
             const cookie = request.cookies['jwt'];

@@ -9,6 +9,8 @@ export class RequestappService{
 
     // @ts-ignore
     async createRequest(data : Prisma.RequestAppCreateInput){
-
+        return this.prismaService.requestApp.create({
+            data
+        });
     }
 }

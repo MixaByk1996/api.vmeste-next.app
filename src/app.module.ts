@@ -8,6 +8,8 @@ import {MailerModule} from "@nestjs-modules/mailer";
 import {CityModule} from "./city/city.module";
 import {QuoteModule} from "./quote/quote.module";
 import {RequestappModule} from "./request_app/requestapp.module";
+import {MessageService} from "./message/message.service";
+import {MessageModule} from "./message/message.module";
 
 @Module({
   imports: [
@@ -15,6 +17,7 @@ import {RequestappModule} from "./request_app/requestapp.module";
       CityModule,
       QuoteModule,
       RequestappModule,
+      MessageModule,
       MailerModule.forRoot({
         transport:{
           host: 'smtp.mail.ru',
@@ -29,6 +32,6 @@ import {RequestappModule} from "./request_app/requestapp.module";
       })
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule {}

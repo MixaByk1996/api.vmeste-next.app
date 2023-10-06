@@ -13,7 +13,14 @@ export class QuoteService{
             where: condition
         })
     }
-
+    async getMessagesByQuoteId(id : string){
+        return this.prismaService.quote.findFirst({
+            select : {
+                messages : true
+            },
+            where : {id : parseInt(id)}
+        })
+    }
     async getQuoteByNameOrDesc(value: string){
         return this.prismaService.quote.findMany({
             where: {
@@ -60,6 +67,11 @@ export class QuoteService{
         })
     }
 
+    async getQuoteById(id : string){
+        return this.prismaService.quote.findFirst({
+            where : { id : parseInt(id)}
+        })
+    }
     async quotes(){
         return this.prismaService.quote.findMany();
     }

@@ -6,7 +6,7 @@ import {CategoryService} from "../category/category.service";
 import {JwtService} from "@nestjs/jwt";
 
 @Module({
-    imports: [RequestappService, PrismaService, CategoryService, JwtService],
+    providers: [RequestappService, PrismaService, CategoryService, JwtService],
     controllers: [RequestappController]
 })
 export class RequestappModule{}

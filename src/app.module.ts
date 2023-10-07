@@ -1,15 +1,16 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import {PrismaService} from "../prisma/prisma.service";
-import {AuthController} from "./auth/auth.controller";
+import {MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
+import {AppController} from './app.controller';
+import {AppService} from './app.service';
 import {AuthModule} from "./auth/auth.module";
 import {MailerModule} from "@nestjs-modules/mailer";
 import {CityModule} from "./city/city.module";
 import {QuoteModule} from "./quote/quote.module";
 import {RequestappModule} from "./request_app/requestapp.module";
-import {MessageService} from "./message/message.service";
 import {MessageModule} from "./message/message.module";
+import {AuthMiddleware} from "./middleware/auth.middleware";
+import {UserService} from "./user/user.service";
+import {JwtService} from "@nestjs/jwt";
+import {PrismaService} from "../prisma/prisma.service";
 
 @Module({
   imports: [
@@ -32,6 +33,12 @@ import {MessageModule} from "./message/message.module";
       })
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService, UserService, JwtService, PrismaService]
 })
-export class AppModule {}
+export class AppModule implements NestModule{
+    configure(consumer: MiddlewareConsumer): any {
+        consumer
+            .apply(AuthMiddleware)
+            .forRoutes({path: '/api/*', method : RequestMethod.ALL});
+    }
+}

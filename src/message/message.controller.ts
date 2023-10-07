@@ -26,17 +26,8 @@ export class MessageController{
         @Body('quote_id') quote_id : string,
         @Req() request : Request
     ){
-        const cookie = request.cookies['jwt'];
-        if(!cookie){
-            throw new UnauthorizedException();
-        }
-        const data = await this.jwtService.verifyAsync(cookie,{
-            secret: jwtConstants.secret
-        });
-        if(!data){
-            throw new UnauthorizedException();
-        }
-        const user = await this.userService.findUser({id: data['id']});
+
+        const user = request['user'];
         const quote = await this.quoteService.getQuoteById(quote_id);
         return this.messageSerice.createMessage({
             text,

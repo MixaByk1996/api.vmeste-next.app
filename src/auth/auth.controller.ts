@@ -25,19 +25,13 @@ export class AuthController{
 
     @Post('/api/auth/updateRole')
     async updateRole(@Body('new_role') new_role: string, @Req() request: Request){
-        const cookie = request.cookies['jwt'];
-        const data = await this.jwtService.verifyAsync(cookie,{
-            secret: jwtConstants.secret
-        });
-        if(!data){
-            throw new UnauthorizedException();
-        }
+        const user = request['user'];
         return this.userService.updateUser({
-            where :{id : Number(data['id'])},
+            where :{id : Number(user.id)},
             data : {role : new_role}
         })
     }
-    @Post('/api/auth/register')
+    @Post('/register')
     async register(
         @Body('name') name : string,
         @Body('email') email : string,
@@ -100,14 +94,7 @@ export class AuthController{
     @Get('/api/auth/user')
     async user(@Req() request: Request){
         try{
-            const cookie = request.cookies['jwt'];
-            const data = await this.jwtService.verifyAsync(cookie,{
-                secret: jwtConstants.secret
-            });
-            if(!data){
-                throw new UnauthorizedException();
-            }
-            return await this.userService.findUser({id: data['id']});
+            return request['user'];
         }catch (e){
             throw new UnauthorizedException();
         }

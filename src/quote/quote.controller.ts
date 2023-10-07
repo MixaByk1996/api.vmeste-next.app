@@ -20,23 +20,13 @@ export class QuoteController{
     async getAll(){
         return this.quoteService.quotes();
     }
-    @Post('/search')
+    @Post('/api/search')
     async search(@Body('text') text : string){
         return this.quoteService.getQuoteByNameOrDesc(text);
     }
     @Get('/exit-from-quote/:id_quote')
     async exitFromQuote(@Param('id_quote') id : number, @Req() request : Request){
-        const cookie = request.cookies['jwt'];
-        if(!cookie){
-            throw new UnauthorizedException();
-        }
-        const data = await this.jwtService.verifyAsync(cookie,{
-            secret: jwtConstants.secret
-        });
-        if(!data){
-            throw new UnauthorizedException();
-        }
-        const user = await this.userService.findUser({id: data['id']})
+        const user = request['user'];
         return this.quoteService.deleteUserByQuote({
             userId_quoteId: {
                 userId : user.id,
@@ -74,17 +64,7 @@ export class QuoteController{
         @Body('category_id') category_id:string,
         @Req() request : Request
     ){
-        const cookie = request.cookies['jwt'];
-        if(!cookie){
-            throw new UnauthorizedException();
-        }
-        const data = await this.jwtService.verifyAsync(cookie,{
-            secret: jwtConstants.secret
-        });
-        if(!data){
-            throw new UnauthorizedException();
-        }
-        const user = await this.userService.findUser({id: data['id']})
+        const user = request['user'];
         const category = await this.categoryService.getCategoryById(category_id)
         return this.quoteService.createQuote({
             name,
@@ -94,8 +74,8 @@ export class QuoteController{
             description,
             photo_url,
             city_name,
-            creater: {
-                connect : user
+            creater:{
+                connect: await this.userService.findUser({id: user.id})
             },
             category:{
                 connect: category
@@ -107,13 +87,7 @@ export class QuoteController{
     @Delete("/:id")
     async delete(@Param('id') id: string, @Req() request: Request){
         try{
-            const cookie = request.cookies['jwt'];
-            const data = await this.jwtService.verifyAsync(cookie);
-            if(!data){
-                throw new UnauthorizedException();
-            }
-            const user = await this.userService.findUser({id: data['id']})
-
+            const user = request['user'];
             const count = this.quoteService.getCountQuotesByCurrentUser(user.id);
             if(count){
                 return this.quoteService.deleteQuote({id: Number(id)});

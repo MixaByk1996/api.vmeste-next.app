@@ -11,6 +11,8 @@ import {AuthMiddleware} from "./middleware/auth.middleware";
 import {UserService} from "./user/user.service";
 import {JwtService} from "@nestjs/jwt";
 import {PrismaService} from "../prisma/prisma.service";
+import {CategoryModule} from "./category/category.module";
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import {PrismaService} from "../prisma/prisma.service";
       QuoteModule,
       RequestappModule,
       MessageModule,
+      CategoryModule,
       MailerModule.forRoot({
         transport:{
           host: 'smtp.mail.ru',
@@ -30,7 +33,8 @@ import {PrismaService} from "../prisma/prisma.service";
           },
           from: 'Test <app.vmeste-mail@mail.ru>'
         },
-      })
+      }),
+      EventsModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService, JwtService, PrismaService]

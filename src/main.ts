@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from "cookie-parser";
+import {EventsGateway} from "./events/events.gateway";
+import {request} from "express";
 
 async function bootstrap() {
   BigInt.prototype['toJSON'] = function () {
@@ -13,5 +15,7 @@ async function bootstrap() {
     credentials: true
   })
   await app.listen(3000);
+  const eg = app.get(EventsGateway);
+  setInterval(() => eg.getMessages(), 1000);
 }
 bootstrap();

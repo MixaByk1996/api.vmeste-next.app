@@ -52,7 +52,7 @@ export class QuoteController{
         })
     }
 
-    @Post('/')
+    @Post('/create')
     async createQuote(
         @Body('name') name : string,
         @Body('realization_period') realization_period : string,

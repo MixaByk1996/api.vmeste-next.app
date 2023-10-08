@@ -73,7 +73,11 @@ export class QuoteService{
         })
     }
     async quotes(){
-        return this.prismaService.quote.findMany();
+        return this.prismaService.quote.findMany({
+            include:{
+                messages : true
+            }
+        });
     }
 
     async getAllQuotes(params: {
@@ -91,7 +95,8 @@ export class QuoteService{
             where,
             orderBy,
             include :{
-                category : true
+                category : true,
+                messages: true
             }
         })
     }

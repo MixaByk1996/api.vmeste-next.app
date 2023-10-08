@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../../prisma/prisma.service";
-import {Category} from "@prisma/client";
+import {Category, Prisma} from "@prisma/client";
 
 @Injectable()
 export class CategoryService{
@@ -13,5 +13,11 @@ export class CategoryService{
                 id : Number(id)
             }
         });
+    }
+
+    async createCategory(data : Prisma.CategoryCreateInput){
+        return this.prisma.category.create({
+            data : data
+        })
     }
 }

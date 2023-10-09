@@ -23,33 +23,30 @@ export class AuthController{
         private jwtService : JwtService
     ) {}
 
-    @Post('/api/auth/updateRole')
-    async updateRole(@Body('new_role') new_role: string, @Req() request: Request){
-        const user = request['user'];
-        return this.userService.updateUser({
-            where :{id : Number(user.id)},
-            data : {role : new_role}
-        })
-    }
+    // @Post('/api/auth/updateRole')
+    // async updateRole(@Body('new_role') new_role: string, @Req() request: Request){
+    //     const user = request['user'];
+    //     return this.userService.updateUser({
+    //         where :{id : Number(user.id)},
+    //         data : {role : new_role}
+    //     })
+    // }
     @Post('/register')
     async register(
         @Body('name') name : string,
         @Body('email') email : string,
         @Body('password') password : string,
         @Body('photo_url') photo_url : string,
-        @Body('role') role : string,
         @Body('hasVerification') hasVerification : boolean,
         @Body('account_category') account_category : string,
     ){
         const hashedPassword = await bcrypt.hash(password, 12);
         await this.userService.sendEmail(email);
-
         return this.userService.register({
-            accountCategory: account_category,
+            accountCategory: "USER_ADMIN",
             name,
            email,
             photo_url,
-            role,
            password : hashedPassword,
            hasVerification : false,
            balance : 0,

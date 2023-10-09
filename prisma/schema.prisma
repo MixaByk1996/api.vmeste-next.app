@@ -16,14 +16,20 @@ model User {
   email           String          @unique
   password        String
   photo_url       String // base64
-  accountCategory String
-  role            String
+  accountCategory TypeUser
   hasVerification Boolean         @default(false)
   balance         Float           @default(0)
   createAt        DateTime        @default(now())
   messages        Message[]
   createQuotes    Quote[]
   quotes          UsersOnQuotes[]
+}
+
+enum TypeUser {
+  USER_ORDINARY
+  USER_DELIVERY
+  USER_ADMIN
+  USER_MODERATOR
 }
 
 model Subcategory {
@@ -93,13 +99,36 @@ model RequestApp {
   categoryId    Int?
 }
 
+enum TypeMessage {
+  TYPE_TEXT
+  TYPE_QUIZ
+}
+
 model Message {
-  id        Int    @id @default(autoincrement())
-  text      String
-  creater   User?  @relation(fields: [createrId], references: [id])
+  id        Int         @id @default(autoincrement())
+  type      TypeMessage
+  text      String?
+  quiz      Quiz?
+  creater   User?       @relation(fields: [createrId], references: [id])
   createrId Int?
-  quote     Quote? @relation(references: [id], fields: [quoteId])
+  quote     Quote?      @relation(references: [id], fields: [quoteId])
   quoteId   Int?
+  createdAt DateTime    @default(now())
+}
+
+model Quiz {
+  id        Int      @id @default(autoincrement())
+  text      String
+  answers   Answer[]
+  message   Message? @relation(fields: [messageId], references: [id])
+  messageId Int?     @unique
+}
+
+model Answer {
+  id     Int    @id @default(autoincrement())
+  text   String
+  quiz   Quiz?  @relation(fields: [quizId], references: [id])
+  quizId Int?
 }
 
 // model City{

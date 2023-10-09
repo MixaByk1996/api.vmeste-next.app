@@ -13,6 +13,7 @@ import {JwtService} from "@nestjs/jwt";
 import {PrismaService} from "../prisma/prisma.service";
 import {CategoryModule} from "./category/category.module";
 import { EventsModule } from './events/events.module';
+import {SwaggerModule} from "@nestjs/swagger";
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { EventsModule } from './events/events.module';
           from: 'Test <app.vmeste-mail@mail.ru>'
         },
       }),
-      EventsModule
+      EventsModule,
+      SwaggerModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService, JwtService, PrismaService]

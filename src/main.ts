@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import cookieParser from "cookie-parser";
 import {EventsGateway} from "./events/events.gateway";
 import {request} from "express";
+import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 
 async function bootstrap() {
   BigInt.prototype['toJSON'] = function () {
@@ -14,8 +15,19 @@ async function bootstrap() {
     origin: 'http://localhost:3000',
     credentials: true
   })
+  // const config = new DocumentBuilder()
+  //     .setTitle('Documentation')
+  //     .setDescription('Описание API Backend асти')
+  //     .setVersion('1.0')
+  //     .addTag('cats')
+  //     .build();
+  // const document = SwaggerModule.createDocument(app, config);
+  //SwaggerModule.setup('documentation', app, document);
+
   await app.listen(3000);
   const eg = app.get(EventsGateway);
   setInterval(() => eg.getMessages(), 1000);
+
+
 }
 bootstrap();

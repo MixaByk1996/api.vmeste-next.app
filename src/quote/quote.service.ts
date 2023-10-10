@@ -96,7 +96,7 @@ export class QuoteService{
             orderBy,
             include :{
                 category : true,
-                messages: true
+                users : true
             }
         })
     }

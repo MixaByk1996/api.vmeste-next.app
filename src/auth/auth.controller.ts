@@ -76,9 +76,9 @@ export class AuthController{
         return user;
     }
 
-    @Get('/api/auth/verification/:email')
-    async verification(@Param('email') email: string){
-
+    @Post('/api/auth/verification')
+    async verification(@Body() token : string){
+        const email = this.userService.decodeConfirmationToken(token);
         await this.userService.updateUser({
             where: {email: String(email)},
             data: {hasVerification: true}

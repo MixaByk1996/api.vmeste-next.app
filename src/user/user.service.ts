@@ -38,7 +38,7 @@ export class UserService {
             secret : '7AnEd5epXmdaJfUrokkQ',
             expiresIn : '21600s'
         })
-        const url = `http://localhost:3000/confirm-email?token=${token}`;
+        const url = `http://localhost:3000/verification/${token}`;
         const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
         await this.mailerService.sendMail({
             to: email,
@@ -54,7 +54,7 @@ export class UserService {
                 secret: '7AnEd5epXmdaJfUrokkQ',
             });
 
-            if (typeof payload === 'object' && 'email' in payload) {
+            if ('email' in payload) {
                 return payload.email;
             }
             throw new BadRequestException();
@@ -73,8 +73,8 @@ export class UserService {
     }): Promise<User> {
         const { data, where } = params;
         return this.prisma.user.update({
-            data,
-            where,
+            data : data,
+            where : where
         });
     }
     async users(params: {

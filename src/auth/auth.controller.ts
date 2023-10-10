@@ -37,8 +37,6 @@ export class AuthController{
         @Body('email') email : string,
         @Body('password') password : string,
         @Body('photo_url') photo_url : string,
-        @Body('hasVerification') hasVerification : boolean,
-        @Body('account_category') account_category : string,
     ){
         const hashedPassword = await bcrypt.hash(password, 12);
         await this.userService.sendEmail(email);
@@ -76,8 +74,8 @@ export class AuthController{
         return user;
     }
 
-    @Post('/api/auth/verification')
-    async verification(@Body() token : string){
+    @Get('/verification/:token')
+    async verification(@Param('token') token : string){
         const email = this.userService.decodeConfirmationToken(token);
         await this.userService.updateUser({
             where: {email: String(email)},

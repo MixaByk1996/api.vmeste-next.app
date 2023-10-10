@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from "cookie-parser";
-import {EventsGateway} from "./events/events.gateway";
+import { EventsGateway } from './events/events.gateway';
 import {request} from "express";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 

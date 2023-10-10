@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Req, UnauthorizedException} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Post, Req, UnauthorizedException} from "@nestjs/common";
 import {MessageService} from "./message.service";
 import {QuoteService} from "../quote/quote.service";
 import {jwtConstants} from "../auth/auth.constants";
@@ -57,6 +57,11 @@ export class MessageController{
                 connect: quiz
             }
         })
+    }
+
+    @Delete('/delete-quiz-message/:id')
+    async deleteQuiz(@Param('id') id : string){
+        return this.messageSerice.deleteMessage(id);
     }
 
     @Post('/create-text-message')

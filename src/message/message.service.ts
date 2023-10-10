@@ -12,4 +12,10 @@ export class MessageService{
         });
     }
 
+    async deleteMessage(id){
+        return this.prismaService.message.delete({
+            where : {id : Number(id)}
+        })
+    }
+
 }

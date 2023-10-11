@@ -77,10 +77,7 @@ export class AuthController{
     @Get('/verification/:token')
     async verification(@Param('token') token : string){
         const email = this.userService.decodeConfirmationToken(token);
-        await this.userService.updateUser({
-            where: {email: String(email)},
-            data: {hasVerification: true}
-        })
+        await this.userService.updateUser(await email)
         return {
             message : "This email is activated now!"
         }

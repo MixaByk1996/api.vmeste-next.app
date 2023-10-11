@@ -22,7 +22,7 @@ export class UserService {
         });
         // @ts-ignore
         const {password, ...result} = createdUser;
-        return createdUser;
+        return result;
     }
 
     async findUser(condition: any): Promise<User>{
@@ -53,11 +53,7 @@ export class UserService {
             const payload = await this.jwtService.verify(token, {
                 secret: '7AnEd5epXmdaJfUrokkQ',
             });
-
-            if ('email' in payload) {
-                return payload.email;
-            }
-            throw new BadRequestException();
+            return payload.email;
         } catch (error) {
             if (error?.name === 'TokenExpiredError') {
                 throw new BadRequestException('Email confirmation token expired');
@@ -67,14 +63,11 @@ export class UserService {
     }
     //async login()
 
-    async updateUser(params: {
-        where: Prisma.UserWhereUniqueInput;
-        data: Prisma.UserUpdateInput;
-    }): Promise<User> {
-        const { data, where } = params;
+    async updateUser(email : string): Promise<User> {
         return this.prisma.user.update({
-            data : data,
-            where : where
+            where: {email: email},
+            data: {hasVerification: true}
+
         });
     }
     async users(params: {

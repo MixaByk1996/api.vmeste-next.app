@@ -68,7 +68,9 @@ export class AuthController{
         if(!user.hasVerification){
             throw new BadRequestException('Email is not verification');
         }
-        const jwt = await this.jwtService.signAsync({id: user.id});
+        const jwt = await this.jwtService.signAsync({id: user.id},{
+            secret: jwtConstants.secret
+        });
         response.cookie('jwt', jwt, {httpOnly:true});
 
         return user;

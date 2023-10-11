@@ -1,7 +1,6 @@
-import {Body, Controller, Delete, Get, Param, Post, Req, UnauthorizedException} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Post, Req} from "@nestjs/common";
 import {MessageService} from "./message.service";
 import {QuoteService} from "../quote/quote.service";
-import {jwtConstants} from "../auth/auth.constants";
 import {JwtService} from "@nestjs/jwt";
 import {UserService} from "../user/user.service";
 import {Request} from "express";
@@ -17,7 +16,7 @@ export class MessageController{
         private userService: UserService
     ) {}
 
-    @Get('/get-messages/:id')
+    @Get('/get-messages-by-quote/:id')
     async getMessages(@Param('id') id : string){
         return this.quoteService.getQuoteById(id);
     }
@@ -31,32 +30,38 @@ export class MessageController{
     ){
         let arr_answers = [];
         let answers_added = [];
-        arr_answers = JSON.parse(answers_json);
+        arr_answers = answers_json.split(';');//JSON.parse(answers_json);
+        console.log(arr_answers);
         for (let i = 0; i < arr_answers.length; i++){
             answers_added[i] = await this.prismaService.answer.create({
                 data : {text : arr_answers[i]}
             })
         }
-
-        const quiz = await this.prismaService.quiz.create({
-            data : {text : question, answers : {
-                connect: answers_added
-            }}
-        })
         const user = request['user'];
         const quote = await this.quoteService.getQuoteById(quote_id);
-        return this.messageSerice.createMessage({
+        const quiz = await this.prismaService.quiz.create({
+            data :
+                {text : question,
+                    answers : {
+                        connect: answers_added
+                    }
+                }
+        })
+        // @ts-ignore
+
+
+        return await this.messageSerice.createMessage({
             type: "TYPE_QUIZ",
-            creater : {
-                connect : user
+            creater: {
+                connect: await this.userService.findUser({id: user.id})
             },
             quote: {
-                connect : quote
+                connect: quote
             },
             quiz: {
                 connect: quiz
             }
-        })
+        });
     }
 
     @Delete('/delete-quiz-message/:id')
@@ -72,12 +77,13 @@ export class MessageController{
     ){
 
         const user = request['user'];
+        console.log(user);
         const quote = await this.quoteService.getQuoteById(quote_id);
         return this.messageSerice.createMessage({
             text,
             type : "TYPE_TEXT",
-            creater:{
-                connect : user
+            creater: {
+                connect: await this.userService.findUser({id: user.id})
             },
             quote:{
                 connect: quote

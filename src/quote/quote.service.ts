@@ -62,7 +62,8 @@ export class QuoteService{
         return this.prismaService.quote.findFirst({
             where : {id : Number(id)},
             include: {
-                users: true
+                users: true,
+                messages: true
             }
         })
     }
@@ -73,9 +74,18 @@ export class QuoteService{
         })
     }
     async quotes(){
+        // @ts-ignore
         return this.prismaService.quote.findMany({
             include:{
-                messages : true
+                messages : {
+                    include:{
+                        quiz :{
+                            include:{
+                                answers : true
+                            }
+                        }
+                    }
+                }
             }
         });
     }
@@ -96,7 +106,18 @@ export class QuoteService{
             orderBy,
             include :{
                 category : true,
-                users : true
+                messages: true,
+                users : {
+                    include:{
+                        user: {
+                            select :{
+                                name : true,
+                                email:true,
+                                photo_url: true
+                            }
+                        }
+                    }
+                }
             }
         })
     }

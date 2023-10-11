@@ -3,7 +3,6 @@ import {PrismaService} from "../../prisma/prisma.service";
 import {Prisma, User} from "@prisma/client";
 import {MailerService} from "@nestjs-modules/mailer";
 import {JwtService} from "@nestjs/jwt";
-import * as process from "process";
 
 // @ts-ignore
 @Injectable()
@@ -15,19 +14,35 @@ export class UserService {
     ) {
     }
 
+
     // @ts-ignore
     async register(data : Prisma.UserCreateInput) : Promise<User>{
-        const createdUser = this.prisma.user.create({
-            data
-        });
         // @ts-ignore
-        const {password, ...result} = createdUser;
-        return result;
+        return this.prisma.user.create({
+            data,
+            select: {
+                name: true,
+                email: true,
+                photo_url: true,
+                accountCategory: true,
+                balance: true,
+                createAt: true
+            }
+        });
     }
 
     async findUser(condition: any): Promise<User>{
+        // @ts-ignore
         return this.prisma.user.findFirst({
             where: condition
+            // select: {
+            //     name: true,
+            //     email: true,
+            //     photo_url: true,
+            //     accountCategory: true,
+            //     balance: true,
+            //     createAt: true
+            // }
         })
     }
 

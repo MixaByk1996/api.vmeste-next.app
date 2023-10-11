@@ -108,7 +108,8 @@ model Message {
   id        Int         @id @default(autoincrement())
   type      TypeMessage
   text      String?
-  quiz      Quiz?
+  quiz      Quiz?       @relation(fields: [quizId], references: [id])
+  quizId    Int?        @unique
   creater   User?       @relation(fields: [createrId], references: [id])
   createrId Int?
   quote     Quote?      @relation(references: [id], fields: [quoteId])
@@ -117,11 +118,10 @@ model Message {
 }
 
 model Quiz {
-  id        Int      @id @default(autoincrement())
-  text      String
-  answers   Answer[]
-  message   Message? @relation(fields: [messageId], references: [id])
-  messageId Int?     @unique
+  id      Int      @id @default(autoincrement())
+  text    String
+  answers Answer[]
+  message Message?
 }
 
 model Answer {

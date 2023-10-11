@@ -94,6 +94,7 @@ CREATE TABLE "Message" (
     "id" SERIAL NOT NULL,
     "type" "TypeMessage" NOT NULL,
     "text" TEXT,
+    "quizId" INTEGER,
     "createrId" INTEGER,
     "quoteId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -105,7 +106,6 @@ CREATE TABLE "Message" (
 CREATE TABLE "Quiz" (
     "id" SERIAL NOT NULL,
     "text" TEXT NOT NULL,
-    "messageId" INTEGER,
 
     CONSTRAINT "Quiz_pkey" PRIMARY KEY ("id")
 );
@@ -123,7 +123,7 @@ CREATE TABLE "Answer" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Quiz_messageId_key" ON "Quiz"("messageId");
+CREATE UNIQUE INDEX "Message_quizId_key" ON "Message"("quizId");
 
 -- AddForeignKey
 ALTER TABLE "Subcategory" ADD CONSTRAINT "Subcategory_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -147,13 +147,13 @@ ALTER TABLE "UsersOnQuotes" ADD CONSTRAINT "UsersOnQuotes_quoteId_fkey" FOREIGN 
 ALTER TABLE "RequestApp" ADD CONSTRAINT "RequestApp_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Message" ADD CONSTRAINT "Message_quizId_fkey" FOREIGN KEY ("quizId") REFERENCES "Quiz"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_createrId_fkey" FOREIGN KEY ("createrId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_quoteId_fkey" FOREIGN KEY ("quoteId") REFERENCES "Quote"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Quiz" ADD CONSTRAINT "Quiz_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "Message"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Answer" ADD CONSTRAINT "Answer_quizId_fkey" FOREIGN KEY ("quizId") REFERENCES "Quiz"("id") ON DELETE SET NULL ON UPDATE CASCADE;

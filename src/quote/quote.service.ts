@@ -88,7 +88,10 @@ export class QuoteService{
                     include:{
                         quiz :{
                             include:{
-                                answers : true
+                               answers: true,
+                                _count : {
+                                   select:{answers : true}
+                               }
                             }
                         }
                     }

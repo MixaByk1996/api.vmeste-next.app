@@ -14,6 +14,9 @@ import {PrismaService} from "../prisma/prisma.service";
 import {CategoryModule} from "./category/category.module";
 import { EventsModule } from './events/events.module';
 import {SwaggerModule} from "@nestjs/swagger";
+import {EventModule} from "./event/event.module";
+import {VoteService} from "./vote/vote.service";
+import {VoteModule} from "./vote/vote.module";
 
 @Module({
   imports: [
@@ -23,6 +26,8 @@ import {SwaggerModule} from "@nestjs/swagger";
       RequestappModule,
       MessageModule,
       CategoryModule,
+      EventModule,
+      VoteModule,
       MailerModule.forRoot({
         transport:{
           host: 'smtp.mail.ru',

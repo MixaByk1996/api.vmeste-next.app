@@ -1,7 +1,7 @@
 import {SubscribeMessage, WebSocketGateway, WebSocketServer} from '@nestjs/websockets';
 import { Server} from "socket.io";
 import {QuoteService} from "../quote/quote.service";
-@WebSocketGateway({namespace: 'events'})
+@WebSocketGateway({namespace: 'messages'})
 export class EventsGateway {
   constructor(private quoteService : QuoteService) {
   }

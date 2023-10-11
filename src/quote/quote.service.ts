@@ -68,6 +68,12 @@ export class QuoteService{
         })
     }
 
+    async setAmountByQuote(data : Prisma.EventCreateInput){
+        return this.prismaService.event.create({
+            data
+        })
+    }
+
     async getQuoteById(id : string){
         return this.prismaService.quote.findFirst({
             where : { id : parseInt(id)}
@@ -77,6 +83,7 @@ export class QuoteService{
         // @ts-ignore
         return this.prismaService.quote.findMany({
             include:{
+                events: true,
                 messages : {
                     include:{
                         quiz :{

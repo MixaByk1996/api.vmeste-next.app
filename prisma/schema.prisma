@@ -23,6 +23,7 @@ model User {
   messages        Message[]
   createQuotes    Quote[]
   quotes          UsersOnQuotes[]
+  voted           Vote[]
 }
 
 enum TypeUser {
@@ -129,6 +130,15 @@ model Answer {
   text   String
   quiz   Quiz?  @relation(fields: [quizId], references: [id])
   quizId Int?
+  voted  Vote[]
+}
+
+model Vote {
+  id       Int     @id @default(autoincrement())
+  answer   Answer? @relation(fields: [answerId], references: [id])
+  answerId Int?
+  user     User?   @relation(fields: [userId], references: [id])
+  userId   Int?
 }
 
 // model City{

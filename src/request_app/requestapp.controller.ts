@@ -1,4 +1,4 @@
-import {BadRequestException, Body, Controller, Post} from "@nestjs/common";
+import {BadRequestException, Body, Controller, Get, Post} from "@nestjs/common";
 import {RequestappService} from "./requestapp.service";
 import {CategoryService} from "../category/category.service";
 
@@ -9,7 +9,12 @@ export class RequestappController{
         private categoryService : CategoryService
     ) {}
 
-    @Post('/')
+    @Get('/')
+    async getAllRequest(){
+        return this.requestappService.getAllRequest();
+    }
+
+    @Post('/create')
     async createReq(
         @Body('name') name : string,
         @Body('count_products') countProducts : string,

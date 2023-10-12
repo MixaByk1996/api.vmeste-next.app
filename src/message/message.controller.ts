@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post, Query, Req} from "@nestjs/common";
+import {BadRequestException, Body, Controller, Delete, Get, Param, Post, Query, Req} from "@nestjs/common";
 import {MessageService} from "./message.service";
 import {QuoteService} from "../quote/quote.service";
 import {JwtService} from "@nestjs/jwt";
@@ -39,6 +39,7 @@ export class MessageController{
         }
         const user = request['user'];
         const quote = await this.quoteService.getQuoteById(quote_id);
+
         const quiz = await this.prismaService.quiz.create({
             data :
                 {text : question,
@@ -77,8 +78,10 @@ export class MessageController{
     ){
 
         const user = request['user'];
-        console.log(user);
         const quote = await this.quoteService.getQuoteById(quote_id);
+        if(!quote){
+            throw new BadRequestException("Quote is not found!");
+        }
         return this.messageSerice.createMessage({
             text,
             type : "TYPE_TEXT",

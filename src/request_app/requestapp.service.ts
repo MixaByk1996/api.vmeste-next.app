@@ -13,4 +13,13 @@ export class RequestappService{
             data
         });
     }
+
+    async getAllRequest(){
+        return this.prismaService.requestApp.findMany();
+    }
+    // async updateRequest(data : Prisma.RequestAppUpdateInput){
+    //     return this.prismaService.requestApp.update({
+    //         data
+    //     })
+    // }
 }

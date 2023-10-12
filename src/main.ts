@@ -18,14 +18,14 @@ async function bootstrap() {
     credentials: true
   })
   app.use(favicom(path.join(process.cwd(),'public','favicon.ico')))
-  // const config = new DocumentBuilder()
-  //     .setTitle('Documentation')
-  //     .setDescription('Описание API Backend асти')
-  //     .setVersion('1.0')
-  //     .addTag('cats')
-  //     .build();
-  // const document = SwaggerModule.createDocument(app, config);
-  //SwaggerModule.setup('documentation', app, document);
+  const config = new DocumentBuilder()
+      .setTitle('Documentation')
+      .setDescription('Описание API Backend асти')
+      .setVersion('1.0')
+      .addTag('cats')
+      .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('documentation', app, document);
 
   await app.listen(3000);
   const eg = app.get(EventsGateway);

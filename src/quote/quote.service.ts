@@ -84,15 +84,21 @@ export class QuoteService{
         return this.prismaService.quote.findMany({
             include:{
                 events: true,
+
                 messages : {
                     include:{
                         quiz :{
                             include:{
-                               answers: true,
-                                _count : {
-                                   select:{answers : true}
+                               answers: {
+                                   include:{
+                                       _count:{
+                                           select : {
+                                               votes : true
+                                           }
+                                       }
+                                   }
                                }
-                            }
+                            },
                         }
                     }
                 }

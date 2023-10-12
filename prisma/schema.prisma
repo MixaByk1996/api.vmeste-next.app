@@ -23,7 +23,7 @@ model User {
   messages        Message[]
   createQuotes    Quote[]
   quotes          UsersOnQuotes[]
-  voted           Vote[]
+  votes           Vote[]
 }
 
 enum TypeUser {
@@ -130,7 +130,7 @@ model Answer {
   text   String
   quiz   Quiz?  @relation(fields: [quizId], references: [id])
   quizId Int?
-  voted  Vote[]
+  votes  Vote[]
 }
 
 model Vote {

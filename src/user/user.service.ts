@@ -1,6 +1,6 @@
 import {BadRequestException, Injectable} from "@nestjs/common";
 import {PrismaService} from "../../prisma/prisma.service";
-import {Prisma, User} from "@prisma/client";
+import type {Prisma, User} from "@prisma/client";
 import {MailerService} from "@nestjs-modules/mailer";
 import {JwtService} from "@nestjs/jwt";
 

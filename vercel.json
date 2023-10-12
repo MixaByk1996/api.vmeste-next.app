@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "env" : {
+    "MYSQL_URI" : "@vmeste_api_mysql_uri"
+  },
   "builds": [
     {
       "src": "src/main.ts",

@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import { EventsGateway } from './events/events.gateway';
 import {request} from "express";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-import {favicom} from "serve-favicon";
+import * as favicom from "serve-favicon";
 import * as path from "path";
 import process from "process";
 async function bootstrap() {

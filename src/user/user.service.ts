@@ -3,6 +3,7 @@ import {PrismaService} from "../../prisma/prisma.service";
 import type {Prisma, User} from "@prisma/client";
 import {MailerService} from "@nestjs-modules/mailer";
 import {JwtService} from "@nestjs/jwt";
+import process from "process";
 
 // @ts-ignore
 @Injectable()
@@ -53,7 +54,7 @@ export class UserService {
             secret : '7AnEd5epXmdaJfUrokkQ',
             expiresIn : '21600s'
         })
-        const url = `http://localhost:3000/verification/${token}`;
+        const url = `${process.cwd()}/verification/${token}`;
         const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
         await this.mailerService.sendMail({
             to: email,

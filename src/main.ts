@@ -13,10 +13,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser('secret'));
   app.enableCors();
-  // app.enableCors({
-  //   origin: 'http://localhost:3000',
-  //   credentials: true
-  // })
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true
+  })
   const config = new DocumentBuilder()
       .setTitle('Documentation')
       .setDescription('Описание API Backend асти')

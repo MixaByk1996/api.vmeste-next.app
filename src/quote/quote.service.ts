@@ -68,7 +68,17 @@ export class QuoteService{
         return this.prismaService.quote.findFirst({
             where : {id : Number(id)},
             include: {
-                users: true,
+                users: {
+                    include: {
+                        user : {
+                            select : {
+                                name : true,
+                                photo_url: true,
+                                createAt : true
+                            }
+                        }
+                    }
+                },
                 messages: true
             }
         })

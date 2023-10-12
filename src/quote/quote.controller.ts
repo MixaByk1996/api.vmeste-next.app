@@ -58,10 +58,11 @@ export class QuoteController{
         @Req() request : Request
     ){
         const user = request['user'];
+
         const quote = await this.quoteService.getQuoteById(quote_id);
         return this.quoteService.addUserToQuote({
             user: {
-                connect : user
+                connect : await this.userService.findUser({id : user.id})
             },
             quote:{
                 connect : quote

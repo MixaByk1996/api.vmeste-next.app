@@ -3,9 +3,8 @@ import {
     Body,
     Controller,
     Get,
-    Param,
     Post,
-    Put, Query,
+    Query,
     Req,
     Res,
     UnauthorizedException

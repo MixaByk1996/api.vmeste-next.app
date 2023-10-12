@@ -39,7 +39,9 @@ export class MessageController{
         }
         const user = request['user'];
         const quote = await this.quoteService.getQuoteById(quote_id);
-
+        if(!quote){
+            throw new BadRequestException("Quote is not found!");
+        }
         const quiz = await this.prismaService.quiz.create({
             data :
                 {text : question,

@@ -27,8 +27,8 @@ async function bootstrap() {
   SwaggerModule.setup('documentation', app, document);
 
   await app.listen(3000);
-  const eg = app.get(EventsGateway);
-  setInterval(() => eg.getMessages(), 1000);
+  // const eg = app.get(EventsGateway);
+  // setInterval(() => eg.getMessages(), 1000);
 
 
 }

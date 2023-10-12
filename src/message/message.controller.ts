@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post, Req} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Post, Query, Req} from "@nestjs/common";
 import {MessageService} from "./message.service";
 import {QuoteService} from "../quote/quote.service";
 import {JwtService} from "@nestjs/jwt";
@@ -16,8 +16,8 @@ export class MessageController{
         private userService: UserService
     ) {}
 
-    @Get('/get-messages-by-quote/:id')
-    async getMessages(@Param('id') id : string){
+    @Get('/get-messages-by-quote')
+    async getMessages(@Query('id') id : string){
         return this.quoteService.getQuoteById(id);
     }
 
@@ -64,8 +64,8 @@ export class MessageController{
         });
     }
 
-    @Delete('/delete-quiz-message/:id')
-    async deleteQuiz(@Param('id') id : string){
+    @Delete('/delete-quiz-message')
+    async deleteQuiz(@Query('id') id : string){
         return this.messageSerice.deleteMessage(id);
     }
 

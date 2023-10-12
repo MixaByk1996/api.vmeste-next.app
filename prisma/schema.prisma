@@ -18,7 +18,7 @@ model User {
   email           String          @unique
   password        String
   photo_url       String // base64
-  accountCategory TypeUser
+  accountCategory TypeUser        @default(USER_ORDINARY)
   hasVerification Boolean         @default(false)
   balance         Float           @default(0)
   createAt        DateTime        @default(now())

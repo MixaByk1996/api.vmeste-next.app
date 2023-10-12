@@ -1,4 +1,15 @@
-import {Body, Controller, Delete, Get, Param, Post, Req, UnauthorizedException} from "@nestjs/common";
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Query,
+    Req,
+    UnauthorizedException
+} from "@nestjs/common";
 // @ts-ignore
 import {ApplicationService, QuoteService} from "./quote.service";
 import {Request, response, Response} from "express";
@@ -24,8 +35,8 @@ export class QuoteController{
     async search(@Body('text') text : string){
         return this.quoteService.getQuoteByNameOrDesc(text);
     }
-    @Get('/exit-from-quote/:id_quote')
-    async exitFromQuote(@Param('id_quote') id : number, @Req() request : Request){
+    @Get('/exit-from-quote')
+    async exitFromQuote(@Query('id_quote') id : number, @Req() request : Request){
         const user = request['user'];
         return this.quoteService.deleteUserByQuote({
             userId_quoteId: {
@@ -35,13 +46,13 @@ export class QuoteController{
         })
     }
 
-    @Get('/get-details-quote/:id')
-    async getFirstQuote(@Param('id') id : string){
+    @Get('/get-details-quote')
+    async getFirstQuote(@Query('id') id : string){
         return await this.quoteService.getDetailsQuote(id) || [];
     }
 
-    @Get('/get-quotes-by-category/:id')
-    async getQuotes(@Param('id') id: string){
+    @Get('/get-quotes-by-category')
+    async getQuotes(@Query('id') id: string){
         //const category = this.categoryService.getCategoryById(id);
         return this.quoteService.getAllQuotes({
             where:{
@@ -60,6 +71,9 @@ export class QuoteController{
         const user = request['user'];
 
         const quote = await this.quoteService.getQuoteById(quote_id);
+        if(!quote){
+            throw new BadRequestException("Quote is not found!");
+        }
         return this.quoteService.addUserToQuote({
             user: {
                 connect : await this.userService.findUser({id : user.id})
@@ -83,7 +97,10 @@ export class QuoteController{
         @Req() request : Request
     ){
         const user = request['user'];
-        const category = await this.categoryService.getCategoryById(category_id)
+        const category = await this.categoryService.getCategoryById(category_id);
+        if(!category){
+            throw new BadRequestException("Category is not found!");
+        }
         return this.quoteService.createQuote({
             name,
             realization_period: new Date(realization_period),
@@ -102,8 +119,8 @@ export class QuoteController{
 
     }
 
-    @Delete("/:id")
-    async delete(@Param('id') id: string, @Req() request: Request){
+    @Delete("/delete")
+    async delete(@Query('id') id: string, @Req() request: Request){
         try{
             const user = request['user'];
             const count = this.quoteService.getCountQuotesByCurrentUser(user.id);
@@ -111,7 +128,7 @@ export class QuoteController{
                 return this.quoteService.deleteQuote({id: Number(id)});
             }
             else{
-                return {message : "Заявка не удалена"};
+                return {message : "Quote is not deleted!"};
             }
 
             // return await this.userService.findUser({id: data['id']});

@@ -5,7 +5,7 @@ import {
     Get,
     Param,
     Post,
-    Put,
+    Put, Query,
     Req,
     Res,
     UnauthorizedException
@@ -76,8 +76,8 @@ export class AuthController{
         return user;
     }
 
-    @Get('/verification/:token')
-    async verification(@Param('token') token : string){
+    @Get('/verification')
+    async verification(@Query('token') token : string){
         const email = this.userService.decodeConfirmationToken(token);
         await this.userService.updateUser(await email)
         return {

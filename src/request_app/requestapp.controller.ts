@@ -1,4 +1,4 @@
-import {Body, Controller, Post} from "@nestjs/common";
+import {BadRequestException, Body, Controller, Post} from "@nestjs/common";
 import {RequestappService} from "./requestapp.service";
 import {CategoryService} from "../category/category.service";
 
@@ -19,6 +19,9 @@ export class RequestappController{
         @Body('category_id') category_id : string
     ){
         const category = await this.categoryService.getCategoryById(category_id);
+        if(!category){
+            throw new BadRequestException("Category is not found!");
+        }
         return this.requestappService.createRequest({
             name,
             countProducts : parseInt(countProducts),

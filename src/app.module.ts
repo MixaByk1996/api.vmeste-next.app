@@ -17,21 +17,6 @@ import {SwaggerModule} from "@nestjs/swagger";
 import {EventModule} from "./event/event.module";
 import {VoteService} from "./vote/vote.service";
 import {VoteModule} from "./vote/vote.module";
-import {PusherModule} from "nestjs-pusher";
-import Pusher from "pusher";
-import {PusherController} from "./pusher/pusher.controller";
-import {QuoteService} from "./quote/quote.service";
-
-const yourPusherOptions = {
-    key: 'd81476718b238eafe6ef',
-    appId: '1686326',
-    secret: '7c7bbb076906bd44e52a',
-}
-
-const chunkingOptions = {
-    limit: 40000, //4mb
-    enabled: true
-}
 
 @Module({
   imports: [
@@ -55,15 +40,11 @@ const chunkingOptions = {
           from: 'Test <app.vmeste-mail@mail.ru>'
         },
       }),
-      PusherModule.forRoot(
-          <Pusher.Options>yourPusherOptions,
-          chunkingOptions,
-          true
-      ),
+      EventsModule,
       SwaggerModule
   ],
-  controllers: [AppController, PusherController],
-  providers: [AppService, UserService, JwtService, PrismaService, QuoteService]
+  controllers: [AppController],
+  providers: [AppService, UserService, JwtService, PrismaService]
 })
 export class AppModule implements NestModule{
     configure(consumer: MiddlewareConsumer): any {

@@ -52,6 +52,23 @@ export class QuoteController{
         })
     }
 
+    @Post('/add-current-user-to-quote')
+    async addCurrentUserToQuote(
+        @Body('quote_id') quote_id : string,
+        @Req() request : Request
+    ){
+        const user = request['user'];
+        const quote = await this.quoteService.getQuoteById(quote_id);
+        return this.quoteService.addUserToQuote({
+            user: {
+                connect : user
+            },
+            quote:{
+                connect : quote
+            }
+        })
+    }
+
     @Post('/create')
     async createQuote(
         @Body('name') name : string,

@@ -58,6 +58,12 @@ export class QuoteService{
         })
     }
 
+    async addUserToQuote(data : Prisma.UsersOnQuotesCreateInput){
+        return this.prismaService.usersOnQuotes.create({
+            data
+        });
+    }
+
     async getDetailsQuote(id : string){
         return this.prismaService.quote.findFirst({
             where : {id : Number(id)},

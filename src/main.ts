@@ -4,7 +4,6 @@ import cookieParser from "cookie-parser";
 import { EventsGateway } from './events/events.gateway';
 import {request} from "express";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-import * as favicom from "serve-favicon";
 import * as path from "path";
 import process from "process";
 async function bootstrap() {
@@ -17,7 +16,6 @@ async function bootstrap() {
     origin: 'http://localhost:3000',
     credentials: true
   })
-  app.use(favicom(path.join(process.cwd(),'public','favicon.ico')))
   const config = new DocumentBuilder()
       .setTitle('Documentation')
       .setDescription('Описание API Backend асти')

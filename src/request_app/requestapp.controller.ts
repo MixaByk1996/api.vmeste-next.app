@@ -1,8 +1,10 @@
 import {BadRequestException, Body, Controller, Get, Post} from "@nestjs/common";
 import {RequestappService} from "./requestapp.service";
 import {CategoryService} from "../category/category.service";
+import {ApiTags} from "@nestjs/swagger";
 
 @Controller("/api/request-app/")
+@ApiTags('ReqestApp')
 export class RequestappController{
     constructor(
         private requestappService : RequestappService,

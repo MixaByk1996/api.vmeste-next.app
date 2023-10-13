@@ -1,7 +1,9 @@
 import {Body, Controller, Post, Req} from "@nestjs/common";
 import {VoteService} from "./vote.service";
+import {ApiTags} from "@nestjs/swagger";
 
 @Controller('/api/vote')
+@ApiTags('Votes')
 export class VoteController{
     constructor(
         private voteService : VoteService

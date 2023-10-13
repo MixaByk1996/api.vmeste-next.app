@@ -18,8 +18,10 @@ import {UserService} from "../user/user.service";
 import * as process from "process";
 import {jwtConstants} from "../auth/auth.constants";
 import {CategoryService} from "../category/category.service";
+import {ApiTags} from "@nestjs/swagger";
 
 @Controller('/api/quote')
+@ApiTags('Quotes')
 export class QuoteController{
     constructor(private quoteService: QuoteService,
                 private categoryService: CategoryService,

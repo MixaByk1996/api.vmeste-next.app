@@ -1,8 +1,11 @@
 import {BadRequestException, Body, Controller, Post} from "@nestjs/common";
 import {EventService} from "./event.service";
 import {QuoteService} from "../quote/quote.service";
+import {ApiTags} from "@nestjs/swagger";
+import {CreateEventDto} from "../dtos/event/create-event.dto";
 
 @Controller('/api/event')
+@ApiTags('Event')
 export class EventController{
     // @ts-ignore
     constructor(
@@ -13,12 +16,12 @@ export class EventController{
 
     @Post('/create')
     async createEventByQuote(
-        @Body('name') name : string,
-        @Body('quote_id') quote_id : string
+        @Body() createEventDto : CreateEventDto
     ){
-        const quote = await this.quoteService.getQuoteById(quote_id);
+        const name = createEventDto.name;
+        const quote = await this.quoteService.getQuoteById(createEventDto.quote_id);
         if(!quote){
-            throw new BadRequestException("Quote is not found!");
+            throw new BadRequestException("Заявка не найдена!");
         }
         return this.eventService.setAmountByQuote({
             name,

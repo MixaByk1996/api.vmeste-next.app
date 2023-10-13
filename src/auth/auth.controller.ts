@@ -14,8 +14,12 @@ import * as bcrypt from 'bcrypt';
 import {JwtService} from "@nestjs/jwt";
 import {Request, Response} from "express";
 import {jwtConstants} from "./auth.constants";
+import {ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {CreateUserDto} from "../dtos/users/create-user.dto";
+import {LoginUserDto} from "../dtos/users/login-user.dto";
 
 @Controller()
+@ApiTags('Users')
 export class AuthController{
     constructor(
         private readonly userService : UserService,
@@ -32,40 +36,29 @@ export class AuthController{
     // }
     @Post('/register')
     async register(
-        @Body('name') name : string,
-        @Body('email') email : string,
-        @Body('password') password : string,
-        @Body('photo_url') photo_url : string,
+        @Body() createUser : CreateUserDto
     ){
-        const hashedPassword = await bcrypt.hash(password, 12);
-        await this.userService.sendEmail(email);
-        return this.userService.register({
-            accountCategory: "USER_ADMIN",
-            name,
-           email,
-            photo_url,
-           password : hashedPassword,
-           hasVerification : false,
-           balance : 0,
-        });
+        await this.userService.sendEmail(createUser.email);
+        return this.userService.register(createUser);
     }
 
     @Post('/login')
     async login(
-        @Body('email') email : string,
-        @Body('password') password : string,
+        @Body() userLogin : LoginUserDto,
         @Res({passthrough: true}) response: Response
     ){
+        const email = userLogin.email;
+        // @ts-ignore
         const user = await this.userService.findUser({email});
         if(!user){
             throw new BadRequestException('Email is not in list');
         }
 
-        if(!await bcrypt.compare(password, user.password)){
-            throw new BadRequestException('Password is not equals');
+        if(!await bcrypt.compare(userLogin.password, user.password)){
+            throw new BadRequestException('');
         }
         if(!user.hasVerification){
-            throw new BadRequestException('Email is not verification');
+            throw new BadRequestException('Почта не верифицирована!');
         }
         const jwt = await this.jwtService.signAsync({id: user.id},{
             secret: jwtConstants.secret
@@ -76,6 +69,8 @@ export class AuthController{
     }
 
     @Get('/verification')
+    @ApiResponse({description: "Верификация почты по токену, отправленному на почту"})
+    @ApiQuery({name : "token", description : "Токен для верификации"})
     async verification(@Query('token') token : string){
         const email = this.userService.decodeConfirmationToken(token);
         await this.userService.updateUser(await email)
@@ -85,6 +80,8 @@ export class AuthController{
     }
 
     @Get('/api/auth/user')
+    @ApiResponse({status: 200, description : "Текущий пользователь"})
+    @ApiResponse({status: 401, description : "Не авторизирован пользователь"})
     async user(@Req() request: Request){
         try{
             return request['user'];
@@ -97,7 +94,7 @@ export class AuthController{
     async logout(@Res({passthrough: true}) response : Response){
         response.clearCookie('jwt');
         return{
-            message : 'success'
+            message : 'Вы вышли из системы'
         }
     }
 }

@@ -4,6 +4,8 @@ import type {Prisma, User} from "@prisma/client";
 import {MailerService} from "@nestjs-modules/mailer";
 import {JwtService} from "@nestjs/jwt";
 import process from "process";
+import {CreateUserDto} from "../dtos/users/create-user.dto";
+import * as bcrypt from "bcrypt";
 
 // @ts-ignore
 @Injectable()
@@ -17,10 +19,19 @@ export class UserService {
 
 
     // @ts-ignore
-    async register(data : Prisma.UserCreateInput) : Promise<User>{
+    async register(user : CreateUserDto) : Promise<User>{
+
         // @ts-ignore
         return this.prisma.user.create({
-            data,
+            data : {
+                name : user.name,
+                hasVerification: false,
+                password: await bcrypt.hash(user.password, 12),
+                photo_url : user.photo_url,
+                accountCategory : "USER_ORDINARY",
+                balance : 0,
+                email : user.email
+            },
             select: {
                 name: true,
                 email: true,

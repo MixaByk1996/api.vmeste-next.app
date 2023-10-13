@@ -100,7 +100,6 @@ export class QuoteService{
         return this.prismaService.quote.findMany({
             include:{
                 events: true,
-
                 messages : {
                     include:{
                         quiz :{
@@ -136,6 +135,7 @@ export class QuoteService{
             cursor,
             where,
             orderBy,
+
             include :{
                 category : true,
                 messages: true,

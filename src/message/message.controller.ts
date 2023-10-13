@@ -5,8 +5,12 @@ import {JwtService} from "@nestjs/jwt";
 import {UserService} from "../user/user.service";
 import {Request} from "express";
 import {PrismaService} from "../../prisma/prisma.service";
+import {ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {CreateQuizMessageDto} from "../dtos/message/create-quiz-message.dto";
+import {CreateTextMessageDto} from "../dtos/message/create-text-message.dto";
 
 @Controller("/api/message")
+@ApiTags('Message')
 export class MessageController{
     constructor(
         private messageSerice: MessageService,
@@ -17,28 +21,28 @@ export class MessageController{
     ) {}
 
     @Get('/get-messages-by-quote')
+    @ApiQuery({name : 'id', description : 'Id заявки'})
+    @ApiResponse({status: 200, description: 'return: Заявка со сообщениями в ней'})
     async getMessages(@Query('id') id : string){
         return this.quoteService.getQuoteById(id);
     }
 
     @Post('/create-quiz-message')
     async createMessageQuiz(
-        @Body('question') question : string,
-        @Body('answers_json') answers_json : string,
-        @Body('quote_id') quote_id : string,
+        @Body() createQuiz : CreateQuizMessageDto,
         @Req() request : Request
     ){
         let arr_answers = [];
         let answers_added = [];
-        arr_answers = answers_json.split(';');//JSON.parse(answers_json);
-        console.log(arr_answers);
+        arr_answers = createQuiz.answers.split(';');//JSON.parse(answers_json);
+        const question = createQuiz.question;
         for (let i = 0; i < arr_answers.length; i++){
             answers_added[i] = await this.prismaService.answer.create({
                 data : {text : arr_answers[i]}
             })
         }
         const user = request['user'];
-        const quote = await this.quoteService.getQuoteById(quote_id);
+        const quote = await this.quoteService.getQuoteById(createQuiz.quote_id);
         if(!quote){
             throw new BadRequestException("Quote is not found!");
         }
@@ -68,21 +72,21 @@ export class MessageController{
     }
 
     @Delete('/delete-quiz-message')
+    @ApiQuery({name : 'id', description: 'Id сообщения - опроса'})
     async deleteQuiz(@Query('id') id : string){
         return this.messageSerice.deleteMessage(id);
     }
 
     @Post('/create-text-message')
     async createMessage(
-        @Body('text') text : string,
-        @Body('quote_id') quote_id : string,
+        @Body() createMessage : CreateTextMessageDto,
         @Req() request : Request
     ){
-
         const user = request['user'];
-        const quote = await this.quoteService.getQuoteById(quote_id);
+        const text = createMessage.text;
+        const quote = await this.quoteService.getQuoteById(createMessage.text);
         if(!quote){
-            throw new BadRequestException("Quote is not found!");
+            throw new BadRequestException("Заявка не найдена!");
         }
         return this.messageSerice.createMessage({
             text,

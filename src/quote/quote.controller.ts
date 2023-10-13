@@ -18,7 +18,8 @@ import {UserService} from "../user/user.service";
 import * as process from "process";
 import {jwtConstants} from "../auth/auth.constants";
 import {CategoryService} from "../category/category.service";
-import {ApiTags} from "@nestjs/swagger";
+import {ApiBody, ApiQuery, ApiTags} from "@nestjs/swagger";
+import {CreateQuoteDto} from "../dtos/quote/create-quote.dto";
 
 @Controller('/api/quote')
 @ApiTags('Quotes')
@@ -38,7 +39,9 @@ export class QuoteController{
         return this.quoteService.getQuoteByNameOrDesc(text);
     }
     @Get('/exit-from-quote')
-    async exitFromQuote(@Query('id_quote') id : number, @Req() request : Request){
+    @ApiBody({description: 'Одно поле в body : quote_id'})
+    @ApiQuery({name : 'quote_id', description : 'Id заявки'})
+    async exitFromQuote(@Query('quote_id') id : number, @Req() request : Request){
         const user = request['user'];
         return this.quoteService.deleteUserByQuote({
             userId_quoteId: {
@@ -49,11 +52,13 @@ export class QuoteController{
     }
 
     @Get('/get-details-quote')
+    @ApiQuery({name : 'id', description : 'Id заявки'})
     async getFirstQuote(@Query('id') id : string){
         return await this.quoteService.getDetailsQuote(id) || [];
     }
 
     @Get('/get-quotes-by-category')
+    @ApiQuery({name : 'id', description : 'Id категории'})
     async getQuotes(@Query('id') id: string){
         //const category = this.categoryService.getCategoryById(id);
         return this.quoteService.getAllQuotes({
@@ -66,6 +71,7 @@ export class QuoteController{
     }
 
     @Post('/add-current-user-to-quote')
+    @ApiBody({description: 'Одно поле в body : quote_id'})
     async addCurrentUserToQuote(
         @Body('quote_id') quote_id : string,
         @Req() request : Request
@@ -74,7 +80,7 @@ export class QuoteController{
 
         const quote = await this.quoteService.getQuoteById(quote_id);
         if(!quote){
-            throw new BadRequestException("Quote is not found!");
+            throw new BadRequestException("Заявка не найдена!");
         }
         return this.quoteService.addUserToQuote({
             user: {
@@ -88,24 +94,23 @@ export class QuoteController{
 
     @Post('/create')
     async createQuote(
-        @Body('name') name : string,
-        @Body('realization_period') realization_period : string,
-        @Body('status') status : string,
-        @Body('tags') tags : string,
-        @Body('description') description : string,
-        @Body('photo_url') photo_url : string,
-        @Body('city_name') city_name : string,
-        @Body('category_id') category_id:string,
+        @Body() createuoteDto : CreateQuoteDto,
         @Req() request : Request
     ){
         const user = request['user'];
-        const category = await this.categoryService.getCategoryById(category_id);
+        const category = await this.categoryService.getCategoryById(createuoteDto.category_id);
         if(!category){
             throw new BadRequestException("Category is not found!");
         }
+        const name = createuoteDto.name;
+        const status = createuoteDto.status;
+        const tags = createuoteDto.tags;
+        const photo_url = createuoteDto.photo;
+        const description = createuoteDto.description;
+        const city_name = createuoteDto.city_name;
         return this.quoteService.createQuote({
             name,
-            realization_period: new Date(realization_period),
+            realization_period: new Date(createuoteDto.realization_period),
             status,
             tags,
             description,
@@ -122,6 +127,7 @@ export class QuoteController{
     }
 
     @Delete("/delete")
+    @ApiQuery({name : 'id', description : 'Id заявки'})
     async delete(@Query('id') id: string, @Req() request: Request){
         try{
             const user = request['user'];
@@ -130,7 +136,7 @@ export class QuoteController{
                 return this.quoteService.deleteQuote({id: Number(id)});
             }
             else{
-                return {message : "Quote is not deleted!"};
+                return {message : "Не удален!"};
             }
 
             // return await this.userService.findUser({id: data['id']});

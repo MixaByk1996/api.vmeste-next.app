@@ -9,6 +9,7 @@ import { writeFileSync, createWriteStream } from 'fs';
 import { get } from 'https';
 import * as path from "path";
 import process from "process";
+import * as https from "https";
 async function bootstrap() {
   BigInt.prototype['toJSON'] = function () {
     return parseInt(this.toString());
@@ -28,22 +29,23 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
   const serverUrl = "https://api-vmeste-next-app.vercel.app"
-  get(
+  https.get(
       `${serverUrl}/swagger/swagger-ui-bundle.js`, function
       (response) {
         response.pipe(createWriteStream('swagger-static/swagger-ui-bundle.js'));
         console.log(
             `Swagger UI bundle file written to: '/swagger-static/swagger-ui-bundle.js'`,
         );
+
       });
-  get(`${serverUrl}/swagger/swagger-ui-init.js`, function (response) {
+  https.get(`${serverUrl}/swagger/swagger-ui-init.js`, function (response) {
     response.pipe(createWriteStream('swagger-static/swagger-ui-init.js'));
     console.log(
         `Swagger UI init file written to: '/swagger-static/swagger-ui-init.js'`,
     );
   });
 
-  get(
+  https.get(
       `${serverUrl}/swagger/swagger-ui-standalone-preset.js`,
       function (response) {
         response.pipe(
@@ -54,10 +56,10 @@ async function bootstrap() {
         );
       });
 
-  get(`${serverUrl}/swagger/swagger-ui.css`, function (response) {
+  https.get(`${serverUrl}/swagger/swagger-ui.css`, function (response) {
     response.pipe(createWriteStream('swagger-static/swagger-ui.css'));
     console.log(
-        `Swagger UI css file written to: '/swagger-static/swagger-ui.css'`,
+        `Swagger UI css file written to: '/swagger-static/swagger-ui.css'`
     );
   });
   await app.listen(3000);

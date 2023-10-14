@@ -27,7 +27,7 @@ async function bootstrap() {
       .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
-  const serverUrl = "https://api-vmeste-next-app.vercel.app"
+  const serverUrl = "http://api-vmeste-next-app.vercel.app"
   get(
       `${serverUrl}/swagger/swagger-ui-bundle.js`, function
       (response) {

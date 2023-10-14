@@ -6,7 +6,7 @@ import {request} from "express";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import { resolve } from 'path';
 import { writeFileSync, createWriteStream } from 'fs';
-import { get } from 'http';
+import { get } from 'https';
 import * as path from "path";
 import process from "process";
 async function bootstrap() {
@@ -27,7 +27,7 @@ async function bootstrap() {
       .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
-  const serverUrl = "http://api-vmeste-next-app.vercel.app"
+  const serverUrl = "https://api-vmeste-next-app.vercel.app"
   get(
       `${serverUrl}/swagger/swagger-ui-bundle.js`, function
       (response) {

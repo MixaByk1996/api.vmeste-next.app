@@ -115,6 +115,35 @@ export class UserService {
 
         });
     }
+
+    async updateRole(email : string, role : string): Promise<User> {
+        let em = TypeUser.USER_ORDINARY;
+        switch (role){
+            case "USER_ORDINARY":
+                em = TypeUser.USER_ORDINARY;
+                break;
+            case "USER_DELIVERY":
+                // @ts-ignore
+                em = TypeUser.USER_DELIVERY;
+                break;
+            case "USER_ADMIN":
+                // @ts-ignore
+                em = TypeUser.USER_ADMIN;
+                break;
+            case "USER_MODERATOR":
+                // @ts-ignore
+                em = TypeUser.USER_MODERATOR;
+                break;
+        }
+        return this.prisma.user.update({
+            where: {email: email},
+            data: {accountCategory: em}
+
+        });
+    }
+
+
+
     async users(params: {
         skip?: number;
         take?: number;

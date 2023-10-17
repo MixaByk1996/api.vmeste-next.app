@@ -14,9 +14,10 @@ import * as bcrypt from 'bcrypt';
 import {JwtService} from "@nestjs/jwt";
 import {Request, Response} from "express";
 import {jwtConstants} from "./auth.constants";
-import {ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {ApiBody, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {CreateUserDto} from "../dtos/users/create-user.dto";
 import {LoginUserDto} from "../dtos/users/login-user.dto";
+import {TypeUser} from "@prisma/client";
 
 @Controller()
 @ApiTags('Users')
@@ -26,14 +27,12 @@ export class AuthController{
         private jwtService : JwtService
     ) {}
 
-    // @Post('/api/auth/updateRole')
-    // async updateRole(@Body('new_role') new_role: string, @Req() request: Request){
-    //     const user = request['user'];
-    //     return this.userService.updateUser({
-    //         where :{id : Number(user.id)},
-    //         data : {role : new_role}
-    //     })
-    // }
+    @Post('/api/auth/updateRole')
+    @ApiBody({description: 'Одно поле в body : text (USER_ORDINARY,USER_DELIVERY)'})
+    async updateRole(@Body('new_role') new_role: string, @Req() request: Request){
+        const user = request['user'];
+        return this.userService.updateRole(user.email, new_role);
+    }
     @Post('/register')
     async register(
         @Body() createUser : CreateUserDto

@@ -22,7 +22,7 @@ export class UserService {
     // @ts-ignore
     async register(user : CreateUserDto) : Promise<User>{
         let em = TypeUser.USER_ORDINARY;
-        switch (user.accountCategory){
+        switch (user.account_category){
             case "USER_ORDINARY":
                 em = TypeUser.USER_ORDINARY;
                 break;

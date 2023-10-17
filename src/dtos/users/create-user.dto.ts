@@ -21,5 +21,5 @@ export class CreateUserDto{
     @ApiProperty({
         description: "Тип пользователя(\"USER_ORDINARY\" - обычный пользователь, \"USER_DELIVERY\" - поставщик,\"USER_MODERATOR\" - модератор,\"USER_ADMIN\" - админ)"
     })
-    accountCategory : string;
+    account_category : string;
 }

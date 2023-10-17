@@ -6,6 +6,7 @@ import {JwtService} from "@nestjs/jwt";
 import process from "process";
 import {CreateUserDto} from "../dtos/users/create-user.dto";
 import * as bcrypt from "bcrypt";
+import {TypeUser} from "@prisma/client";
 
 // @ts-ignore
 @Injectable()
@@ -20,7 +21,24 @@ export class UserService {
 
     // @ts-ignore
     async register(user : CreateUserDto) : Promise<User>{
-
+        let em = TypeUser.USER_ORDINARY;
+        switch (user.accountCategory){
+            case "USER_ORDINARY":
+                em = TypeUser.USER_ORDINARY;
+                break;
+            case "USER_DELIVERY":
+                // @ts-ignore
+                em = TypeUser.USER_DELIVERY;
+                break;
+            case "USER_ADMIN":
+                // @ts-ignore
+                em = TypeUser.USER_ADMIN;
+                break;
+            case "USER_MODERATOR":
+                // @ts-ignore
+                em = TypeUser.USER_MODERATOR;
+                break;
+        }
         // @ts-ignore
         return this.prisma.user.create({
             data : {
@@ -28,7 +46,7 @@ export class UserService {
                 hasVerification: false,
                 password: await bcrypt.hash(user.password, 12),
                 photo_url : user.photo_url,
-                accountCategory : "USER_ORDINARY",
+                accountCategory : em,
                 balance : 0,
                 email : user.email
             },

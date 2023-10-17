@@ -1,4 +1,5 @@
 import {ApiProperty} from "@nestjs/swagger";
+import {TypeUser} from "@prisma/client";
 
 export class CreateUserDto{
     @ApiProperty({
@@ -17,4 +18,8 @@ export class CreateUserDto{
         description: "Авка(в формате base64)"
     })
     photo_url : string;
+    @ApiProperty({
+        description: "Тип пользователя(\"USER_ORDINARY\" - обычный пользователь, \"USER_DELIVERY\" - поставщик,\"USER_MODERATOR\" - модератор,\"USER_ADMIN\" - админ)"
+    })
+    accountCategory : string;
 }

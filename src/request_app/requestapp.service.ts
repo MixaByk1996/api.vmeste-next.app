@@ -14,6 +14,18 @@ export class RequestappService{
         });
     }
 
+    async updateRequst(params:{
+        where : Prisma.RequestAppWhereUniqueInput,
+        data : Prisma.RequestAppUpdateInput
+    }){
+        const { where, data } = params;
+        return this.prismaService.requestApp.update({
+            data,
+            where,
+        });
+    }
+
+
     async getAllRequest(){
         return this.prismaService.requestApp.findMany();
     }

@@ -5,7 +5,7 @@ import {
     Delete,
     Get,
     Param,
-    Post,
+    Post, Put,
     Query,
     Req,
     UnauthorizedException
@@ -20,6 +20,7 @@ import {jwtConstants} from "../auth/auth.constants";
 import {CategoryService} from "../category/category.service";
 import {ApiBody, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {CreateQuoteDto} from "../dtos/quote/create-quote.dto";
+import {UpdateQuoteDto} from "../dtos/quote/update-quote.dto";
 
 @Controller('/api/quote')
 @ApiTags('Quotes')
@@ -88,6 +89,26 @@ export class QuoteController{
             },
             quote:{
                 connect : quote
+            }
+        })
+    }
+
+
+
+    // @ts-ignore
+    @Put('/update')
+    @ApiQuery({name : 'id', description : 'Id заявки'})
+    async updateQuote(@Query('id') id: string, @Body() updateDto : UpdateQuoteDto){
+        return this.quoteService.updateQuote({
+            where : { id : Number(id)},
+            data : {
+                name : updateDto.name,
+                realization_period: new Date(updateDto.realization_period),
+                status: updateDto.status,
+                tags : updateDto.tags,
+                description: updateDto.description,
+                photo_url : updateDto.photo,
+                city_name : updateDto.city_name,
             }
         })
     }

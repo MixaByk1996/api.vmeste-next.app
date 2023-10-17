@@ -41,6 +41,17 @@ export class QuoteService{
          });
     }
 
+    async updateQuote(params: {
+        where : Prisma.QuoteWhereUniqueInput,
+        data : Prisma.QuoteUpdateInput
+    }){
+        const { where, data } = params;
+        return this.prismaService.quote.update({
+            data,
+            where,
+        });
+    }
+
     async getCountQuotesByCurrentUser(id: number){
         return this.prismaService.quote.count({
             where: {

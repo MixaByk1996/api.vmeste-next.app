@@ -38,6 +38,11 @@ export class AuthController{
     async register(
         @Body() createUser : CreateUserDto
     ){
+        const email = createUser.email;
+        const user = await this.userService.findUser({email});
+        if(user){
+            throw new BadRequestException('Пользователь с такой почтой существует в системе');
+        }
         await this.userService.sendEmail(createUser.email);
         return this.userService.register(createUser);
     }

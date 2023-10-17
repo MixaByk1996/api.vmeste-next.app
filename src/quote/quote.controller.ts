@@ -36,6 +36,7 @@ export class QuoteController{
         return this.quoteService.quotes();
     }
     @Post('/api/search')
+    @ApiBody({description: 'Одно поле в body : text'})
     async search(@Body('text') text : string){
         return this.quoteService.getQuoteByNameOrDesc(text);
     }

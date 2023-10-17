@@ -83,7 +83,7 @@ export class UserService {
             secret : '7AnEd5epXmdaJfUrokkQ',
             expiresIn : '21600s'
         })
-        const url = `https://api-vmeste-next-app.vercel.app/verification?token=${token}`;
+        const url = `http://91.107.125.160:82/verification?token=${token}`;
         const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
         await this.mailerService.sendMail({
             to: email,

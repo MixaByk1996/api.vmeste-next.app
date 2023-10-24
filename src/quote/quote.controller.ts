@@ -40,7 +40,7 @@ export class QuoteController{
     async search(@Body('text') text : string){
         return this.quoteService.getQuoteByNameOrDesc(text);
     }
-    @Get('/exit-from-quote')
+    @Post('/exit-from-quote')
     @ApiBody({description: 'Одно поле в body : quote_id'})
     @ApiQuery({name : 'quote_id', description : 'Id заявки'})
     async exitFromQuote(@Query('quote_id') id : number, @Req() request : Request){

@@ -28,12 +28,13 @@ export class AuthController{
     ) {}
 
     @Post('/api/auth/updateRole')
-    @ApiBody({description: 'Одно поле в body : text (USER_ORDINARY,USER_DELIVERY)'})
+    @ApiBody({description: 'Метод: обновление роли. Одно поле в body : text (USER_ORDINARY,USER_DELIVERY)'})
     async updateRole(@Body('new_role') new_role: string, @Req() request: Request){
         const user = request['user'];
         return this.userService.updateRole(user.email, new_role);
     }
     @Post('/register')
+    @ApiBody({description: "Регистрация пользователей"})
     async register(
         @Body() createUser : CreateUserDto
     ){
@@ -47,6 +48,7 @@ export class AuthController{
     }
 
     @Post('/login')
+    @ApiBody({description: "Вход в акк"})
     async login(
         @Body() userLogin : LoginUserDto,
         @Res({passthrough: true}) response: Response
@@ -84,6 +86,7 @@ export class AuthController{
     }
 
     @Get('/api/auth/user')
+    @ApiBody({description: "Информация о текущем пользователе"})
     @ApiResponse({status: 200, description : "Текущий пользователь"})
     @ApiResponse({status: 401, description : "Не авторизирован пользователь"})
     async user(@Req() request: Request){
@@ -95,6 +98,7 @@ export class AuthController{
     }
 
     @Post('/logout')
+    @ApiBody({description: "Выход"})
     async logout(@Res({passthrough: true}) response : Response){
         response.clearCookie('jwt');
         return{

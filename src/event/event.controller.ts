@@ -1,7 +1,7 @@
 import {BadRequestException, Body, Controller, Post} from "@nestjs/common";
 import {EventService} from "./event.service";
 import {QuoteService} from "../quote/quote.service";
-import {ApiTags} from "@nestjs/swagger";
+import {ApiBody, ApiTags} from "@nestjs/swagger";
 import {CreateEventDto} from "../dtos/event/create-event.dto";
 
 @Controller('/api/event')
@@ -15,6 +15,7 @@ export class EventController{
     }
 
     @Post('/create')
+    @ApiBody({description: "Добавление события в заявку"})
     async createEventByQuote(
         @Body() createEventDto : CreateEventDto
     ){

@@ -1,7 +1,7 @@
 import {BadRequestException, Body, Controller, Get, Post, Put, Query} from "@nestjs/common";
 import {RequestappService} from "./requestapp.service";
 import {CategoryService} from "../category/category.service";
-import {ApiOkResponse, ApiQuery, ApiTags} from "@nestjs/swagger";
+import {ApiBody, ApiOkResponse, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {ReqAppCreateDto} from "../dtos/requestapp/req-app.create.dto";
 import {ReqAppUpdateDto} from "../dtos/requestapp/req-app.update.dto";
 
@@ -20,6 +20,7 @@ export class RequestappController{
     }
 
     @Post('/create')
+    @ApiBody({description: "Создание запроса"})
     async createReq(
         @Body() reqAppDto : ReqAppCreateDto
     ){
@@ -41,6 +42,7 @@ export class RequestappController{
         })
     }
     @Put('/update')
+    @ApiBody({description: "Обновление запроса"})
     @ApiQuery({name : 'id', description : 'Id запроса'})
     async updateReqApp(@Query('id') id: string, @Body() updateReq : ReqAppUpdateDto){
         const category = await this.categoryService.getCategoryById(updateReq.category_id);

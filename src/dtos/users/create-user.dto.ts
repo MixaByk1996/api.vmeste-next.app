@@ -16,9 +16,10 @@ export class CreateUserDto{
     password : string;
     @ApiProperty({
         default : "",
+        required: false,
         description: "Авка(в формате base64)"
     })
-    photo_url? : string;
+    photo_url : string;
     @ApiProperty({
 
         description: "Тип пользователя(\"USER_ORDINARY\" - обычный пользователь, \"USER_DELIVERY\" - поставщик,\"USER_MODERATOR\" - модератор,\"USER_ADMIN\" - админ)"

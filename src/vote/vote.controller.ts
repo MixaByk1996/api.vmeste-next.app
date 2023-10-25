@@ -1,6 +1,6 @@
 import {Body, Controller, Post, Req} from "@nestjs/common";
 import {VoteService} from "./vote.service";
-import {ApiTags} from "@nestjs/swagger";
+import {ApiBody, ApiTags} from "@nestjs/swagger";
 import {CreateVoteDto} from "../dtos/vote/create-vote.dto";
 
 @Controller('/api/vote')
@@ -11,6 +11,7 @@ export class VoteController{
     ) {}
 
     @Post('/create')
+    @ApiBody({description: "Создание голоса"})
     async createVote(
         @Body() createVoteDto : CreateVoteDto,
         @Req() request : Request

@@ -5,7 +5,7 @@ import {JwtService} from "@nestjs/jwt";
 import {UserService} from "../user/user.service";
 import {Request} from "express";
 import {PrismaService} from "../../prisma/prisma.service";
-import {ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {ApiBody, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {CreateQuizMessageDto} from "../dtos/message/create-quiz-message.dto";
 import {CreateTextMessageDto} from "../dtos/message/create-text-message.dto";
 
@@ -21,6 +21,7 @@ export class MessageController{
     ) {}
 
     @Get('/get-messages-by-quote')
+    @ApiBody({description: "Получение ссобщений в заявке"})
     @ApiQuery({name : 'id', description : 'Id заявки'})
     @ApiResponse({status: 200, description: 'return: Заявка со сообщениями в ней'})
     async getMessages(@Query('id') id : string){
@@ -28,6 +29,7 @@ export class MessageController{
     }
 
     @Post('/create-quiz-message')
+    @ApiBody({description: "Создание сообщения с опросом в чате"})
     async createMessageQuiz(
         @Body() createQuiz : CreateQuizMessageDto,
         @Req() request : Request
@@ -72,12 +74,14 @@ export class MessageController{
     }
 
     @Delete('/delete-quiz-message')
+    @ApiBody({description: "Удаление опроса"})
     @ApiQuery({name : 'id', description: 'Id сообщения - опроса'})
     async deleteQuiz(@Query('id') id : string){
         return this.messageSerice.deleteMessage(id);
     }
 
     @Post('/create-text-message')
+    @ApiBody({description: "Создание обычного текстового сообщения"})
     async createMessage(
         @Body() createMessage : CreateTextMessageDto,
         @Req() request : Request

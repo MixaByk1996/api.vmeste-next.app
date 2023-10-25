@@ -36,12 +36,12 @@ export class QuoteController{
         return this.quoteService.quotes();
     }
     @Post('/api/search')
-    @ApiBody({description: 'Одно поле в body : text'})
+    @ApiBody({description: 'Метод поиска. Одно поле в body : text'})
     async search(@Body('text') text : string){
         return this.quoteService.getQuoteByNameOrDesc(text);
     }
-    @Post('/exit-from-quote')
-    @ApiBody({description: 'Одно поле в body : quote_id'})
+    @Get('/exit-from-quote')
+    @ApiBody({description: 'Выход из заявки. Одно поле в body : quote_id'})
     @ApiQuery({name : 'quote_id', description : 'Id заявки'})
     async exitFromQuote(@Query('quote_id') id : number, @Req() request : Request){
         const user = request['user'];
@@ -54,12 +54,14 @@ export class QuoteController{
     }
 
     @Get('/get-details-quote')
+    @ApiBody({description: 'Детали заявки'})
     @ApiQuery({name : 'id', description : 'Id заявки'})
     async getFirstQuote(@Query('id') id : string){
         return await this.quoteService.getDetailsQuote(id) || [];
     }
 
     @Get('/get-quotes-by-category')
+    @ApiBody({description: 'Список заявок по категории'})
     @ApiQuery({name : 'id', description : 'Id категории'})
     async getQuotes(@Query('id') id: string){
         //const category = this.categoryService.getCategoryById(id);
@@ -73,7 +75,7 @@ export class QuoteController{
     }
 
     @Post('/add-current-user-to-quote')
-    @ApiBody({description: 'Одно поле в body : quote_id'})
+    @ApiBody({description: 'Добавление пользователя в заявку. Одно поле в body : quote_id'})
     async addCurrentUserToQuote(
         @Body('quote_id') quote_id : string,
         @Req() request : Request

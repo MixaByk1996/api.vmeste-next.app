@@ -3,7 +3,7 @@ import {CategoryService} from "./category.service";
 import {CreateCategoryDto} from "../dtos/category/create-category.dto";
 import {ApiResponse, ApiTags} from "@nestjs/swagger";
 
-@Controller("/api/category")
+@Controller("/category")
 @ApiTags('Category')
 export class CategoryController{
     constructor(private categoryService : CategoryService) {

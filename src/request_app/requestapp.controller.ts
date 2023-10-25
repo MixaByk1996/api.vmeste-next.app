@@ -6,7 +6,7 @@ import {ReqAppCreateDto} from "../dtos/requestapp/req-app.create.dto";
 import {ReqAppUpdateDto} from "../dtos/requestapp/req-app.update.dto";
 
 @Controller("/api/request-app/")
-@ApiTags('ReqestApp')
+@ApiTags('RequestApp')
 export class RequestappController{
     constructor(
         private requestappService : RequestappService,

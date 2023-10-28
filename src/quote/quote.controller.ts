@@ -21,6 +21,8 @@ import {CategoryService} from "../category/category.service";
 import {ApiBody, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {CreateQuoteDto} from "../dtos/quote/create-quote.dto";
 import {UpdateQuoteDto} from "../dtos/quote/update-quote.dto";
+import {SerachQuoteDto} from "../dtos/quote/serach-quote.dto";
+import {QuoteIdDto} from "../dtos/quote/quote-id.dto";
 
 @Controller('/api/quote')
 @ApiTags('Quotes')
@@ -37,8 +39,8 @@ export class QuoteController{
     }
     @Post('/api/search')
     @ApiBody({description: 'Метод поиска. Одно поле в body : text'})
-    async search(@Body('text') text : string){
-        return this.quoteService.getQuoteByNameOrDesc(text);
+    async search(@Body() searchDto : SerachQuoteDto){
+        return this.quoteService.getQuoteByNameOrDesc(searchDto.text);
     }
     @Get('/exit-from-quote')
     @ApiBody({description: 'Выход из заявки. Одно поле в body : quote_id'})
@@ -77,12 +79,12 @@ export class QuoteController{
     @Post('/add-current-user-to-quote')
     @ApiBody({description: 'Добавление пользователя в заявку. Одно поле в body : quote_id'})
     async addCurrentUserToQuote(
-        @Body('quote_id') quote_id : string,
+        @Body() quoteDto : QuoteIdDto,
         @Req() request : Request
     ){
         const user = request['user'];
 
-        const quote = await this.quoteService.getQuoteById(quote_id);
+        const quote = await this.quoteService.getQuoteById(quoteDto.quote_id);
         if(!quote){
             throw new BadRequestException("Заявка не найдена!");
         }

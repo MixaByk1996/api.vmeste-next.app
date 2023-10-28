@@ -18,6 +18,7 @@ import {ApiBody, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {CreateUserDto} from "../dtos/users/create-user.dto";
 import {LoginUserDto} from "../dtos/users/login-user.dto";
 import {TypeUser} from "@prisma/client";
+import {UpdateRoleDto} from "../dtos/users/update-role.dto";
 
 @Controller()
 @ApiTags('Users')
@@ -28,10 +29,10 @@ export class AuthController{
     ) {}
 
     @Post('/api/auth/updateRole')
-    @ApiBody({description: 'Метод: обновление роли. Одно поле в body : text (USER_ORDINARY,USER_DELIVERY)'})
-    async updateRole(@Body('new_role') new_role: string, @Req() request: Request){
+    @ApiBody({description: 'Метод: обновление роли. Одно поле в body : new_role (USER_ORDINARY,USER_DELIVERY)'})
+    async updateRole(@Body() updateRole : UpdateRoleDto, @Req() request: Request){
         const user = request['user'];
-        return this.userService.updateRole(user.email, new_role);
+        return this.userService.updateRole(user.email, updateRole.new_role);
     }
     @Post('/register')
     @ApiBody({description: "Регистрация пользователей"})

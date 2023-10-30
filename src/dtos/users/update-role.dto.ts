@@ -1,8 +1,8 @@
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateRoleDto{
-    @ApiProperty({
-        description : "Новое название роли"
-    })
-    new_role : string;
+export class UpdateRoleDto {
+  @ApiProperty({
+    description: 'Новое название роли',
+  })
+  new_role: string;
 }

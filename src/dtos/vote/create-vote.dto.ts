@@ -1,8 +1,8 @@
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateVoteDto{
-    @ApiProperty({
-        description: "Id варианта ответа"
-    })
-    answer_id : string;
+export class CreateVoteDto {
+  @ApiProperty({
+    description: 'Id варианта ответа',
+  })
+  answer_id: string;
 }

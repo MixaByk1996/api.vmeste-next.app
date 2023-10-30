@@ -1,22 +1,25 @@
-import {SubscribeMessage, WebSocketGateway, WebSocketServer} from '@nestjs/websockets';
-import { Server} from "socket.io";
-import {QuoteService} from "../quote/quote.service";
-@WebSocketGateway({namespace: 'messages'})
+import {
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
+import { Server } from 'socket.io';
+import { QuoteService } from '../quote/quote.service';
+@WebSocketGateway({ namespace: 'messages' })
 export class EventsGateway {
-  constructor(private quoteService : QuoteService) {
-  }
+  constructor(private quoteService: QuoteService) {}
   @WebSocketServer()
-  server : Server;
+  server: Server;
   @SubscribeMessage('message')
   handleMessage(client: any, payload: any): string {
     return payload;
   }
 
-  sendMessage(){
+  sendMessage() {
     this.server.emit('newMessage', 'блаблаблаблабла');
   }
 
-  async getMessages(){
+  async getMessages() {
     // @ts-ignore
     this.server.emit('getMessages', await this.quoteService.quotes());
   }

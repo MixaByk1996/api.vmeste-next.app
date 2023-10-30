@@ -1,8 +1,8 @@
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
-export class QuoteIdDto{
-    @ApiProperty({
-        description : "Поиск по строке"
-    })
-    quote_id : string;
+export class QuoteIdDto {
+  @ApiProperty({
+    description: 'Поиск по строке',
+  })
+  quote_id: string;
 }

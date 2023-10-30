@@ -15,7 +15,7 @@ export class EventController{
     }
 
     @Post('/create')
-    @ApiBody({description: "Добавление события в заявку"})
+    @ApiBody({description: "Добавление события в заявку", type : CreateEventDto})
     async createEventByQuote(
         @Body() createEventDto : CreateEventDto
     ){

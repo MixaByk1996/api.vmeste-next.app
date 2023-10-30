@@ -10,6 +10,7 @@ import {
     Req,
     UnauthorizedException
 } from "@nestjs/common";
+
 // @ts-ignore
 import {ApplicationService, QuoteService} from "./quote.service";
 import {Request, response, Response} from "express";
@@ -18,7 +19,7 @@ import {UserService} from "../user/user.service";
 import * as process from "process";
 import {jwtConstants} from "../auth/auth.constants";
 import {CategoryService} from "../category/category.service";
-import {ApiBody, ApiQuery, ApiTags} from "@nestjs/swagger";
+import {ApiBody, ApiExtraModels, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {CreateQuoteDto} from "../dtos/quote/create-quote.dto";
 import {UpdateQuoteDto} from "../dtos/quote/update-quote.dto";
 import {SerachQuoteDto} from "../dtos/quote/serach-quote.dto";
@@ -38,12 +39,14 @@ export class QuoteController{
         return this.quoteService.quotes();
     }
     @Post('/api/search')
-    @ApiBody({description: 'Метод поиска. Одно поле в body : text'})
-    async search(@Body() searchDto : SerachQuoteDto){
-        return this.quoteService.getQuoteByNameOrDesc(searchDto.text);
+    @ApiBody({description: 'Метод поиска.', type : SerachQuoteDto})
+    async search(
+        @Body() searchQuoteDto : SerachQuoteDto
+    ){
+        return this.quoteService.getQuoteByNameOrDesc(searchQuoteDto.text);
     }
     @Get('/exit-from-quote')
-    @ApiBody({description: 'Выход из заявки. Одно поле в body : quote_id'})
+    @ApiBody({description: 'Выход из заявки'})
     @ApiQuery({name : 'quote_id', description : 'Id заявки'})
     async exitFromQuote(@Query('quote_id') id : number, @Req() request : Request){
         const user = request['user'];
@@ -62,25 +65,13 @@ export class QuoteController{
         return await this.quoteService.getDetailsQuote(id) || [];
     }
 
-    @Get('/get-quotes-by-category')
-    @ApiBody({description: 'Список заявок по категории'})
-    @ApiQuery({name : 'id', description : 'Id категории'})
-    async getQuotes(@Query('id') id: string){
-        //const category = this.categoryService.getCategoryById(id);
-        return this.quoteService.getAllQuotes({
-            where:{
-                category : {
-                    id : Number(id)
-                }
-            }
-        })
-    }
+
 
     @Post('/add-current-user-to-quote')
-    @ApiBody({description: 'Добавление пользователя в заявку. Одно поле в body : quote_id'})
+    @ApiBody({description: 'Добавление пользователя в заявку', type : QuoteIdDto})
     async addCurrentUserToQuote(
-        @Body() quoteDto : QuoteIdDto,
-        @Req() request : Request
+        @Req() request : Request,
+        @Body() quoteDto : QuoteIdDto
     ){
         const user = request['user'];
 
@@ -99,10 +90,9 @@ export class QuoteController{
     }
 
 
-
-    // @ts-ignore
     @Put('/update')
     @ApiQuery({name : 'id', description : 'Id заявки'})
+    @ApiBody({description: "Обновление заявки", type : UpdateQuoteDto})
     async updateQuote(@Query('id') id: string, @Body() updateDto : UpdateQuoteDto){
         return this.quoteService.updateQuote({
             where : { id : Number(id)},
@@ -119,6 +109,7 @@ export class QuoteController{
     }
 
     @Post('/create')
+    @ApiBody({description: "Создание заявки", type : CreateQuoteDto})
     async createQuote(
         @Body() createuoteDto : CreateQuoteDto,
         @Req() request : Request

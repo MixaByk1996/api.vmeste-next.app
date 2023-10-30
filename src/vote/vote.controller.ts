@@ -11,7 +11,7 @@ export class VoteController{
     ) {}
 
     @Post('/create')
-    @ApiBody({description: "Создание голоса"})
+    @ApiBody({description: "Создание голоса", type : CreateVoteDto})
     async createVote(
         @Body() createVoteDto : CreateVoteDto,
         @Req() request : Request

@@ -14,7 +14,7 @@ import * as bcrypt from 'bcrypt';
 import {JwtService} from "@nestjs/jwt";
 import {Request, Response} from "express";
 import {jwtConstants} from "./auth.constants";
-import {ApiBody, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {ApiBody, ApiExtraModels, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {CreateUserDto} from "../dtos/users/create-user.dto";
 import {LoginUserDto} from "../dtos/users/login-user.dto";
 import {TypeUser} from "@prisma/client";
@@ -29,13 +29,13 @@ export class AuthController{
     ) {}
 
     @Post('/api/auth/updateRole')
-    @ApiBody({description: 'Метод: обновление роли. Одно поле в body : new_role (USER_ORDINARY,USER_DELIVERY)'})
-    async updateRole(@Body() updateRole : UpdateRoleDto, @Req() request: Request){
+    @ApiBody({description: 'Метод: обновление роли.', type : UpdateRoleDto})
+    async updateRole( @Req() request: Request, @Body() updateRoleDto : UpdateRoleDto){
         const user = request['user'];
-        return this.userService.updateRole(user.email, updateRole.new_role);
+        return this.userService.updateRole(user.email, updateRoleDto.new_role);
     }
     @Post('/register')
-    @ApiBody({description: "Регистрация пользователей"})
+    @ApiBody({description: "Регистрация пользователей", type : CreateUserDto})
     async register(
         @Body() createUser : CreateUserDto
     ){
@@ -49,7 +49,7 @@ export class AuthController{
     }
 
     @Post('/login')
-    @ApiBody({description: "Вход в акк"})
+    @ApiBody({description: "Вход в акк", type : LoginUserDto})
     async login(
         @Body() userLogin : LoginUserDto,
         @Res({passthrough: true}) response: Response
@@ -70,7 +70,7 @@ export class AuthController{
         const jwt = await this.jwtService.signAsync({id: user.id},{
             secret: jwtConstants.secret
         });
-        response.cookie('jwt', jwt, {httpOnly:true});
+        response.cookie('jwt', jwt, { secure: true, sameSite : "none"});
 
         return user;
     }

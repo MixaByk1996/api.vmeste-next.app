@@ -4,5 +4,5 @@ export class CreateCategoryDto{
     @ApiProperty({
         description: "Название категории"
     })
-    name : string
+    name : string;
 }

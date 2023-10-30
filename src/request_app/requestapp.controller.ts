@@ -20,7 +20,7 @@ export class RequestappController{
     }
 
     @Post('/create')
-    @ApiBody({description: "Создание запроса"})
+    @ApiBody({description: "Создание запроса", type : ReqAppCreateDto})
     async createReq(
         @Body() reqAppDto : ReqAppCreateDto
     ){
@@ -42,7 +42,7 @@ export class RequestappController{
         })
     }
     @Put('/update')
-    @ApiBody({description: "Обновление запроса"})
+    @ApiBody({description: "Обновление запроса", type :ReqAppUpdateDto })
     @ApiQuery({name : 'id', description : 'Id запроса'})
     async updateReqApp(@Query('id') id: string, @Body() updateReq : ReqAppUpdateDto){
         const category = await this.categoryService.getCategoryById(updateReq.category_id);

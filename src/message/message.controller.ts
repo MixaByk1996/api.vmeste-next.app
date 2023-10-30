@@ -29,7 +29,7 @@ export class MessageController{
     }
 
     @Post('/create-quiz-message')
-    @ApiBody({description: "Создание сообщения с опросом в чате"})
+    @ApiBody({description: "Создание сообщения с опросом в чате", type : CreateQuizMessageDto})
     async createMessageQuiz(
         @Body() createQuiz : CreateQuizMessageDto,
         @Req() request : Request
@@ -81,7 +81,7 @@ export class MessageController{
     }
 
     @Post('/create-text-message')
-    @ApiBody({description: "Создание обычного текстового сообщения"})
+    @ApiBody({description: "Создание обычного текстового сообщения", type : CreateTextMessageDto})
     async createMessage(
         @Body() createMessage : CreateTextMessageDto,
         @Req() request : Request

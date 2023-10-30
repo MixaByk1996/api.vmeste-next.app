@@ -12,18 +12,20 @@ async function bootstrap() {
   };
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser('secret'));
-  app.enableCors();
-  // {
-  //   origin: 'http://localhost:3000',
-  //       credentials: true
-  // }
+  app.enableCors(
+      {
+        origin: 'http://localhost:3000',
+            credentials: true
+      }
+  );
+
   const config = new DocumentBuilder()
       .setTitle('Documentation')
-      .setDescription('Описание API Backend асти')
+      .setDescription('Описание API Backend части')
       .setVersion('1.0')
       .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('swagger-static', app, document);
+  SwaggerModule.setup('/swagger', app, document);
   await app.listen(3000);
   const eg = app.get(EventsGateway);
   setInterval(() => eg.getMessages(), 1000);

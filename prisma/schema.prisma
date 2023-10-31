@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,45 +7,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id              Int             @id @default(autoincrement())
-  name            String
-  email           String          @unique
-  password        String
-  photo_url       String // base64
-  accountCategory TypeUser        @default(USER_ORDINARY)
-  hasVerification Boolean         @default(false)
-  balance         Float           @default(0)
-  createAt        DateTime        @default(now())
-  messages        Message[]
-  createQuotes    Quote[]
-  quotes          UsersOnQuotes[]
-  votes           Vote[]
+model answer {
+  id     Int    @id @default(autoincrement())
+  text   String
+  quizId Int?
+  quiz   quiz?  @relation(fields: [quizId], references: [id], map: "Answer_quizId_fkey")
+  vote   vote[]
+
+  @@index([quizId], map: "Answer_quizId_fkey")
 }
 
-enum TypeUser {
-  USER_ORDINARY
-  USER_DELIVERY
-  USER_ADMIN
-  USER_MODERATOR
+model category {
+  id          Int           @id @default(autoincrement())
+  name        String
+  quote       quote[]
+  requestapp  requestapp[]
+  subcategory subcategory[]
 }
 
-model Subcategory {
-  id         Int       @id @default(autoincrement())
-  submane    String
-  category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId Int?
+model event {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  quoteId   Int?
+  quote     quote?   @relation(fields: [quoteId], references: [id], map: "Event_quoteId_fkey")
+
+  @@index([quoteId], map: "Event_quoteId_fkey")
 }
 
-model Category {
-  id            Int           @id @default(autoincrement())
-  name          String
-  quote         Quote[]
-  subcategories Subcategory[]
-  requests      RequestApp[]
+model message {
+  id        Int          @id @default(autoincrement())
+  type      message_type
+  text      String?
+  quizId    Int?         @unique(map: "Message_quizId_key")
+  createrId Int?
+  quoteId   Int?
+  createdAt DateTime     @default(now())
+  user      user?        @relation(fields: [createrId], references: [id], map: "Message_createrId_fkey")
+  quiz      quiz?        @relation(fields: [quizId], references: [id], map: "Message_quizId_fkey")
+  quote     quote?       @relation(fields: [quoteId], references: [id], map: "Message_quoteId_fkey")
+
+  @@index([createrId], map: "Message_createrId_fkey")
+  @@index([quoteId], map: "Message_quoteId_fkey")
 }
 
-model Quote {
+model quiz {
+  id      Int      @id @default(autoincrement())
+  text    String
+  answer  answer[]
+  message message?
+}
+
+model quote {
   id                 Int             @id @default(autoincrement())
   name               String
   city_name          String
@@ -56,101 +66,92 @@ model Quote {
   status             String
   tags               String
   description        String
-  photo_url          String // base64
+  photo_url          String
   country_name       String          @default("Россия")
-  creater            User?           @relation(fields: [createrId], references: [id])
   createrId          Int?
-  category           Category?       @relation(fields: [categoryId], references: [id])
   countStar          Int?
   categoryId         Int?
-  min_amount         Float           @default(0.0)
-  comission          Float           @default(0.0)
+  min_amount         Float           @default(0)
+  comission          Float           @default(0)
   createAt           DateTime        @default(now())
-  messages           Message[]
-  events             Event[]
-  users              UsersOnQuotes[]
+  event              event[]
+  message            message[]
+  category           category?       @relation(fields: [categoryId], references: [id], map: "Quote_categoryId_fkey")
+  user               user?           @relation(fields: [createrId], references: [id], map: "Quote_createrId_fkey")
+  usersonquotes      usersonquotes[]
+
+  @@index([categoryId], map: "Quote_categoryId_fkey")
+  @@index([createrId], map: "Quote_createrId_fkey")
 }
 
-model Event {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  quote     Quote?   @relation(fields: [quoteId], references: [id])
-  quoteId   Int?
-}
-
-model UsersOnQuotes {
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  quote      Quote    @relation(fields: [quoteId], references: [id])
-  quoteId    Int
-  assignedAt DateTime @default(now())
-
-  @@id([userId, quoteId])
-}
-
-model RequestApp {
+model requestapp {
   id            Int       @id @default(autoincrement())
   name          String
   countProducts Int
   city          String
   receiptPeriod DateTime
   country       String    @default("Россия")
-  category      Category? @relation(fields: [categoryId], references: [id])
   categoryId    Int?
+  category      category? @relation(fields: [categoryId], references: [id], map: "RequestApp_categoryId_fkey")
+
+  @@index([categoryId], map: "RequestApp_categoryId_fkey")
 }
 
-enum TypeMessage {
+model subcategory {
+  id         Int       @id @default(autoincrement())
+  submane    String
+  categoryId Int?
+  category   category? @relation(fields: [categoryId], references: [id], map: "Subcategory_categoryId_fkey")
+
+  @@index([categoryId], map: "Subcategory_categoryId_fkey")
+}
+
+model user {
+  id              Int                  @id @default(autoincrement())
+  name            String
+  email           String               @unique(map: "User_email_key")
+  password        String
+  photo_url       String
+  accountCategory user_accountCategory @default(USER_ORDINARY)
+  hasVerification Boolean              @default(false)
+  balance         Float                @default(0)
+  createAt        DateTime             @default(now())
+  message         message[]
+  quote           quote[]
+  usersonquotes   usersonquotes[]
+  vote            vote[]
+}
+
+model usersonquotes {
+  userId     Int
+  quoteId    Int
+  assignedAt DateTime @default(now())
+  quote      quote    @relation(fields: [quoteId], references: [id], map: "UsersOnQuotes_quoteId_fkey")
+  user       user     @relation(fields: [userId], references: [id], map: "UsersOnQuotes_userId_fkey")
+
+  @@id([userId, quoteId])
+  @@index([quoteId], map: "UsersOnQuotes_quoteId_fkey")
+}
+
+model vote {
+  id       Int     @id @default(autoincrement())
+  answerId Int?
+  userId   Int?
+  answer   answer? @relation(fields: [answerId], references: [id], map: "Vote_answerId_fkey")
+  user     user?   @relation(fields: [userId], references: [id], map: "Vote_userId_fkey")
+
+  @@index([answerId], map: "Vote_answerId_fkey")
+  @@index([userId], map: "Vote_userId_fkey")
+}
+
+enum message_type {
   TYPE_TEXT
   TYPE_QUIZ
 }
 
-model Message {
-  id        Int         @id @default(autoincrement())
-  type      TypeMessage
-  text      String?
-  quiz      Quiz?       @relation(fields: [quizId], references: [id])
-  quizId    Int?        @unique
-  creater   User?       @relation(fields: [createrId], references: [id])
-  createrId Int?
-  quote     Quote?      @relation(references: [id], fields: [quoteId])
-  quoteId   Int?
-  createdAt DateTime    @default(now())
+enum user_accountCategory {
+  USER_ORDINARY
+  USER_DELIVERY
+  USER_ADMIN
+  USER_MODERATOR
 }
-
-model Quiz {
-  id      Int      @id @default(autoincrement())
-  text    String
-  answers Answer[]
-  message Message?
-}
-
-model Answer {
-  id     Int    @id @default(autoincrement())
-  text   String
-  quiz   Quiz?  @relation(fields: [quizId], references: [id])
-  quizId Int?
-  votes  Vote[]
-}
-
-model Vote {
-  id       Int     @id @default(autoincrement())
-  answer   Answer? @relation(fields: [answerId], references: [id])
-  answerId Int?
-  user     User?   @relation(fields: [userId], references: [id])
-  userId   Int?
-}
-
-// model City{
-//   id Int @id
-//   name String
-//   applications Application[]
-//   country Country? @relation(fields: [countryId], references: [id])
-//   countryId Int?
-// }
-//
-// model Country{
-//   id Int @id
-//   name String
-//   cities City[]
-// }

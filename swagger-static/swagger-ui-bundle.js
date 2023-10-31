@@ -13214,14 +13214,12 @@
                       s = { type: 'text', value: ''.concat(t, '\n') };
                     if (0 === o) {
                       var l = g(
-                        c
-                          .slice(f + 1, h)
-                          .concat(
-                            C({
-                              children: [s],
-                              className: e.properties.className,
-                            }),
-                          ),
+                        c.slice(f + 1, h).concat(
+                          C({
+                            children: [s],
+                            className: e.properties.className,
+                          }),
+                        ),
                         i,
                       );
                       p.push(l);

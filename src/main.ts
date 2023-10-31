@@ -2,10 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 import { EventsGateway } from './events/events.gateway';
-import { request } from 'express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as path from 'path';
-import process from 'process';
+
 async function bootstrap() {
   BigInt.prototype['toJSON'] = function () {
     return parseInt(this.toString());
@@ -24,7 +22,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/swagger', app, document);
-  await app.listen(3000);
+  await app.listen(3333);
   const eg = app.get(EventsGateway);
   setInterval(() => eg.getMessages(), 1000);
 }

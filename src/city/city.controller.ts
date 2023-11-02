@@ -5,7 +5,7 @@ import * as process from 'process';
 import { ApiBody, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { json } from 'express';
 
-@Controller('/api')
+@Controller('')
 @ApiTags('City')
 export class CityController {
   @Get('/cities')

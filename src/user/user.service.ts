@@ -63,14 +63,20 @@ export class UserService {
     // @ts-ignore
     return this.prisma.user.findFirst({
       where: condition,
-      // select: {
-      //     name: true,
-      //     email: true,
-      //     photo_url: true,
-      //     accountCategory: true,
-      //     balance: true,
-      //     createAt: true
-      // }
+      select: {
+        id: true,
+          name: true,
+          email: true,
+          photo_url: true,
+          accountCategory: true,
+          balance: true,
+          createAt: true,
+      },
+      include:{
+        quotes : true,
+        votes: true,
+        messages: true,
+      }
     });
   }
 
@@ -113,7 +119,7 @@ export class UserService {
     });
   }
 
-  async updateRole(email: string, role: string): Promise<User> {
+  async updateRole(id: string, role: string): Promise<User> {
     let em = TypeUser.USER_ORDINARY;
     switch (role) {
       case 'USER_ORDINARY':
@@ -132,9 +138,19 @@ export class UserService {
         em = TypeUser.USER_MODERATOR;
         break;
     }
+    // @ts-ignore
     return this.prisma.user.update({
-      where: { email: email },
+      where: { id: Number(id) },
       data: { accountCategory: em },
+      select:{
+        id: true,
+        name: true,
+        email: true,
+        photo_url: true,
+        accountCategory: true,
+        balance: true,
+        createAt: true
+      }
     });
   }
 

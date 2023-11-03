@@ -63,9 +63,9 @@ export class AuthController {
     @Body() userLogin: LoginUserDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const email = userLogin.email;
+    var email = userLogin.email;
     // @ts-ignore
-    const user = await this.userService.findUser({ email });
+    const user = await this.userService.findUser({email });
     if (!user) {
       throw new BadRequestException('Email is not in list');
     }

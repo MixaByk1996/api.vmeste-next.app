@@ -70,12 +70,7 @@ export class UserService {
         photo_url: true,
         accountCategory: true,
         balance: true,
-        createAt: true,
-      },
-      include: {
-        quotes: true,
-        votes: true,
-        messages: true,
+        createAt: true
       },
     });
   }

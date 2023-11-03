@@ -37,8 +37,8 @@ export class AuthController {
   @Post('/api/auth/update-role')
   @ApiBody({ description: 'Метод: обновление роли.', type: UpdateRoleDto })
   async updateRole(
-      @Req() request: Request,
-      @Body() updateRoleDto: UpdateRoleDto,
+    @Req() request: Request,
+    @Body() updateRoleDto: UpdateRoleDto,
   ) {
     const user = await request['user'];
     return this.userService.updateRole(user.id, updateRoleDto.new_role);
@@ -103,8 +103,8 @@ export class AuthController {
   @Get('/api/get-user-by-id')
   @ApiBody({ description: 'Информация о  пользователе по id' })
   @ApiQuery({ name: 'user_id', description: 'Id пользователя' })
-  async getUserById(@Query('user_id') user_id : string){
-    return this.userService.findUser({id : Number(user_id)})
+  async getUserById(@Query('user_id') user_id: string) {
+    return this.userService.findUser({ id: Number(user_id) });
   }
 
   @Get('/api/auth/user')

@@ -65,18 +65,18 @@ export class UserService {
       where: condition,
       select: {
         id: true,
-          name: true,
-          email: true,
-          photo_url: true,
-          accountCategory: true,
-          balance: true,
-          createAt: true,
+        name: true,
+        email: true,
+        photo_url: true,
+        accountCategory: true,
+        balance: true,
+        createAt: true,
       },
-      include:{
-        quotes : true,
+      include: {
+        quotes: true,
         votes: true,
         messages: true,
-      }
+      },
     });
   }
 
@@ -142,15 +142,15 @@ export class UserService {
     return this.prisma.user.update({
       where: { id: Number(id) },
       data: { accountCategory: em },
-      select:{
+      select: {
         id: true,
         name: true,
         email: true,
         photo_url: true,
         accountCategory: true,
         balance: true,
-        createAt: true
-      }
+        createAt: true,
+      },
     });
   }
 

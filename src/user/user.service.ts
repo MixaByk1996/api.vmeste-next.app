@@ -72,6 +72,11 @@ export class UserService {
         balance: true,
         createAt: true
       },
+      include: {
+        quotes: true,
+        votes: true,
+        messages: true,
+      },
     });
   }
 

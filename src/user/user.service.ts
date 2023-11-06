@@ -67,16 +67,16 @@ export class UserService {
         id: true,
         name: true,
         email: true,
+        password: true,
         photo_url: true,
         accountCategory: true,
+        hasVerification: true,
         balance: true,
-        createAt: true
-      },
-      include: {
+        createAt: true,
         quotes: true,
         votes: true,
-        messages: true,
-      },
+        messages: true
+      }
     });
   }
 

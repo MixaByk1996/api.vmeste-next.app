@@ -65,11 +65,11 @@ export class AuthController {
   ) {
     var email = userLogin.email;
     // @ts-ignore
-    const user = await this.userService.findUser({email });
+    const user = await this.userService.findUser({email : email });
     if (!user) {
       throw new BadRequestException('Email is not in list');
     }
-
+    console.log(user);
     if (!(await bcrypt.compare(userLogin.password, user.password))) {
       throw new BadRequestException('');
     }

@@ -104,7 +104,7 @@ export class AuthController {
   @ApiBody({ description: 'Информация о  пользователе по id' })
   @ApiQuery({ name: 'user_id', description: 'Id пользователя' })
   async getUserById(@Query('user_id') user_id: string) {
-    return this.userService.findUser({ id: Number(user_id) });
+    return await this.userService.findUser({ id: Number(user_id) });
   }
 
   @Get('/api/auth/user')

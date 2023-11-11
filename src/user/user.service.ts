@@ -77,7 +77,7 @@ export class UserService {
         votes: true,
         messages: true
       }
-    });
+    }) || [];
   }
 
   async sendEmail(email: string) {

@@ -100,7 +100,7 @@ export class AuthController {
     };
   }
 
-  @Get('/api/get-user-by-id')
+  @Get('/get-user-by-id')
   @ApiBody({ description: 'Информация о  пользователе по id' })
   @ApiQuery({ name: 'user_id', description: 'Id пользователя' })
   async getUserById(@Query('user_id') user_id: string) {

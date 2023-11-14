@@ -22,6 +22,10 @@ export class CategoryService {
   }
 
   async getAllCategories() {
-    return this.prisma.category.findMany();
+    return this.prisma.category.findMany({
+      include:{
+        subcategories : true
+      }
+    });
   }
 }

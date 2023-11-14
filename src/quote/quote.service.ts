@@ -109,6 +109,12 @@ export class QuoteService {
     return this.prismaService.quote.findMany({
       include: {
         events: true,
+        category: {
+          include:{
+            subcategories: true,
+            requests: true
+          }
+        },
         messages: {
           include: {
             quiz: {

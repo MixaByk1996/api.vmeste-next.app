@@ -5,9 +5,10 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { QuoteService } from '../quote/quote.service';
+import {RequestappService} from "../request_app/requestapp.service";
 @WebSocketGateway({ namespace: 'messages' })
 export class EventsGateway {
-  constructor(private quoteService: QuoteService) {}
+  constructor(private quoteService: QuoteService, private reqAppService: RequestappService) {}
   @WebSocketServer()
   server: Server;
   @SubscribeMessage('message')
@@ -21,6 +22,6 @@ export class EventsGateway {
 
   async getMessages() {
     // @ts-ignore
-    this.server.emit('getMessages', await this.quoteService.quotes());
+    this.server.emit('getMessages', await this.reqAppService.getAllRequest());
   }
 }

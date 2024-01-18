@@ -7,7 +7,7 @@ import {
   Query,
   Req,
   Res,
-  UnauthorizedException,
+  UnauthorizedException, UploadedFile, UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
@@ -25,6 +25,7 @@ import { CreateUserDto } from '../dtos/users/create-user.dto';
 import { LoginUserDto } from '../dtos/users/login-user.dto';
 import { TypeUser } from '@prisma/client';
 import { UpdateRoleDto } from '../dtos/users/update-role.dto';
+import {FileInterceptor} from "@nestjs/platform-express";
 
 @Controller()
 @ApiTags('Users')
@@ -43,6 +44,16 @@ export class AuthController {
     const user = await request['user'];
     return this.userService.updateRole(user.id, updateRoleDto.new_role);
   }
+
+  @Post('/api/auth/change-avatar')
+  @UseInterceptors(FileInterceptor('photo', { dest: './uploads' }))
+  async uploadSingle( @UploadedFile() file : Express.Multer.File) {
+    //const user = await request['user'];
+    console.log(file);
+    // console.log(user);
+  }
+
+
   @Post('/register')
   @ApiBody({ description: 'Регистрация пользователей', type: CreateUserDto })
   async register(@Body() createUser: CreateUserDto) {

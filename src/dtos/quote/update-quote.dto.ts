@@ -32,5 +32,9 @@ export class UpdateQuoteDto {
   @ApiProperty({
     description: 'Id категории',
   })
-  category_id: string;
+  category_id: number;
+  @ApiProperty({
+    description: 'Минимальная цена',
+  })
+  min_amount: number;
 }

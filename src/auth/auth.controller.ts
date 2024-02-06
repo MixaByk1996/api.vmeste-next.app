@@ -7,7 +7,9 @@ import {
   Query,
   Req,
   Res,
-  UnauthorizedException, UploadedFile, UseInterceptors,
+  UnauthorizedException,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
@@ -25,7 +27,7 @@ import { CreateUserDto } from '../dtos/users/create-user.dto';
 import { LoginUserDto } from '../dtos/users/login-user.dto';
 import { TypeUser } from '@prisma/client';
 import { UpdateRoleDto } from '../dtos/users/update-role.dto';
-import {FileInterceptor} from "@nestjs/platform-express";
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller()
 @ApiTags('Users')
@@ -47,12 +49,11 @@ export class AuthController {
 
   @Post('/api/auth/change-avatar')
   @UseInterceptors(FileInterceptor('photo', { dest: './uploads' }))
-  async uploadSingle( @UploadedFile() file : Express.Multer.File) {
+  async uploadSingle(@UploadedFile() file: Express.Multer.File) {
     //const user = await request['user'];
     console.log(file);
     // console.log(user);
   }
-
 
   @Post('/register')
   @ApiBody({ description: 'Регистрация пользователей', type: CreateUserDto })
@@ -76,7 +77,7 @@ export class AuthController {
   ) {
     var email = userLogin.email;
     // @ts-ignore
-    const user = await this.userService.findUser({email : email });
+    const user = await this.userService.findUser({ email: email });
     if (!user) {
       throw new BadRequestException('Email is not in list');
     }
@@ -124,7 +125,17 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Не авторизирован пользователь' })
   async user(@Req() request: Request) {
     try {
-      return request['user'];
+      const user = await request['user'];
+      return {
+        accountCategory: user.accountCategory,
+        balance: user.balance,
+        createAt: user.createAt,
+        email: user.email,
+        hasVerification: user.hasVerification,
+        id: user.id,
+        name: user.name,
+        photo_url: user.photo_url,
+      };
     } catch (e) {
       throw new UnauthorizedException();
     }

@@ -37,8 +37,10 @@ export class QuoteController {
   ) {}
 
   @Get('/')
-  async getAll() {
-    return this.quoteService.quotes();
+  async getAll(@Req() request: Request) {
+    const user = await request['user'];
+    console.log('user', user)
+    return this.quoteService.quotes(user.id);
   }
   @Post('/api/search')
   @ApiBody({ description: 'Метод поиска.', type: SerachQuoteDto })
@@ -107,6 +109,8 @@ export class QuoteController {
         description: updateDto.description,
         photo_url: updateDto.photo,
         city_name: updateDto.city_name,
+        min_amount: updateDto.min_amount,
+        categoryId: updateDto.category_id
       },
     });
   }
@@ -117,7 +121,7 @@ export class QuoteController {
     @Body() createuoteDto: CreateQuoteDto,
     @Req() request: Request,
   ) {
-    const user = request['user'];
+    const user = await request['user'];
     const category = await this.categoryService.getCategoryById(
       createuoteDto.category_id,
     );
@@ -138,12 +142,8 @@ export class QuoteController {
       description,
       photo_url,
       city_name,
-      creater: {
-        connect: await this.userService.findUser({ id: user.id }),
-      },
-      category: {
-        connect: category,
-      },
+      createrId: user.id,
+      categoryId: category.id
     });
   }
 

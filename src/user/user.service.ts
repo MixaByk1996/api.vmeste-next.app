@@ -41,11 +41,11 @@ export class UserService {
         break;
     }
     let user_bank_account = "---None---";
-    let fm = new FormData();
-    fm.append('id', '');
-    fm.append('jsonrpc', '2.0');
-    fm.append('method', 'create_virtual_account');
-    fm.append('params.beneficiary_id', PaymentUrl.beneficiary_id);
+    // let fm = new FormData();
+    // fm.append('id', '');
+    // fm.append('jsonrpc', '2.0');
+    // fm.append('method', 'create_virtual_account');
+    // fm.append('params.beneficiary_id', PaymentUrl.beneficiary_id);
     let response = fetch(PaymentUrl.url);
     // @ts-ignore
     if(response.ok){

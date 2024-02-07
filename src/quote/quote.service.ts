@@ -145,14 +145,7 @@ export class QuoteService {
     where?: Prisma.QuoteWhereInput;
     orderBy?: Prisma.QuoteOrderByWithRelationInput;
   }): Promise<QuoteModel[]> {
-    const { skip, take, cursor, where, orderBy } = params;
     return this.prismaService.quote.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-
       include: {
         category: true,
         messages: true,

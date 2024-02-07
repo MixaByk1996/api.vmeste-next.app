@@ -32,7 +32,7 @@ export class QuoteService {
     });
   }
 
-  async createQuote(data: Prisma.QuoteCreateInput) {
+  async createQuote(data: Prisma.QuoteUncheckedCreateInput) {
     return this.prismaService.quote.create({
       data,
       include: {
@@ -43,7 +43,7 @@ export class QuoteService {
 
   async updateQuote(params: {
     where: Prisma.QuoteWhereUniqueInput;
-    data: Prisma.QuoteUpdateInput;
+    data: Prisma.QuoteUncheckedUpdateInput;
   }) {
     const { where, data } = params;
     return this.prismaService.quote.update({
@@ -104,9 +104,11 @@ export class QuoteService {
       where: { id: parseInt(id) },
     });
   }
-  async quotes() {
-    // @ts-ignore
+  async quotes(user_id: number) {
     return this.prismaService.quote.findMany({
+      where: {
+        createrId: user_id
+      },
       include: {
         events: true,
         category: {

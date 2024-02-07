@@ -91,10 +91,7 @@ export class UserService {
         accountCategory: true,
         hasVerification: true,
         balance: true,
-        createAt: true,
-        quotes: true,
-        votes: true,
-        messages: true
+        createAt: true
       }
     }) || [];
   }

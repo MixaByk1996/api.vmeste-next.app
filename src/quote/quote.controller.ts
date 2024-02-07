@@ -51,7 +51,7 @@ export class QuoteController {
   @ApiBody({ description: 'Выход из заявки' })
   @ApiQuery({ name: 'quote_id', description: 'Id заявки' })
   async exitFromQuote(@Query('quote_id') id: number, @Req() request: Request) {
-    const user = request['user'];
+    const user =await request['user'];
     return this.quoteService.deleteUserByQuote({
       userId_quoteId: {
         userId: user.id,

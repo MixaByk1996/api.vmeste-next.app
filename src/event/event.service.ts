@@ -10,7 +10,15 @@ export class EventService {
     private quoteService: QuoteService,
   ) {}
 
-  async setAmountByQuote(data: Prisma.EventCreateInput) {
+  async setAmountByQuote(data: {
+      quote: {
+          connect: Prisma.Prisma__QuoteClient<GetResult<Prisma.$QuotePayload<DefaultArgs>, {
+              include: { events: boolean };
+              where: { id: number }
+          }, "findFirst"> | null, null, DefaultArgs>
+      };
+      name: string
+  }) {
     return this.prismaService.event.create({
       data,
     });

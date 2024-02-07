@@ -21,6 +21,7 @@ export class EventController {
     if (!quote) {
       throw new BadRequestException('Заявка не найдена!');
     }
+    // @ts-ignore
     return this.eventService.setAmountByQuote({
       name,
       quote: {

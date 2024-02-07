@@ -101,7 +101,11 @@ export class QuoteService {
 
   async getQuoteById(id: string) {
     return this.prismaService.quote.findFirst({
-      where: { id: parseInt(id) },
+      where: { id: Number(id) },
+      include:{
+        events: true,
+
+      }
     });
   }
   async quotes(user_id: number) {

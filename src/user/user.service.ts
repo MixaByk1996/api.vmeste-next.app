@@ -46,13 +46,13 @@ export class UserService {
     // fm.append('jsonrpc', '2.0');
     // fm.append('method', 'create_virtual_account');
     // fm.append('params.beneficiary_id', PaymentUrl.beneficiary_id);
-    let response = fetch(PaymentUrl.url);
-    // @ts-ignore
-    if(response.ok){
-      // @ts-ignore
-      let result = response.json()
-      user_bank_account = result[0].result.virtual_account
-    }
+    // let response = fetch(PaymentUrl.url);
+    // // @ts-ignore
+    // if(response.ok){
+    //   // @ts-ignore
+    //   let result = response.json()
+    //   user_bank_account = result[0].result.virtual_account
+    // }
 
     // @ts-ignore
     return this.prisma.user.create({
@@ -64,7 +64,7 @@ export class UserService {
         accountCategory: em,
         balance: 0,
         email: user.email,
-        bank_account: user_bank_account
+        bank_account: ''
       },
       select: {
         name: true,
@@ -106,7 +106,7 @@ export class UserService {
       secret: '7AnEd5epXmdaJfUrokkQ',
       expiresIn: '21600s',
     });
-    const url = `http://91.107.125.160:82/verification?token=${token}`;
+    const url = `https://vmestebackend-app.ru/verification?token=${token}`;
     const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
     await this.mailerService.sendMail({
       to: email,

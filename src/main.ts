@@ -18,8 +18,8 @@ async function bootstrap() {
     optionsSuccessStatus: 200
   });
 
-  PaymentUrl.url = 'https://stage.tochka.com/api/v1/cyclops/v2/jsonrpc'
-  PaymentUrl.beneficiary_id = ''
+  // PaymentUrl.url = 'https://stage.tochka.com/api/v1/cyclops/v2/jsonrpc'
+  // PaymentUrl.beneficiary_id = ''
   const config = new DocumentBuilder()
     .setTitle('Documentation')
     .setDescription('Описание API Backend части')

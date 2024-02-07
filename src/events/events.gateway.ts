@@ -22,6 +22,6 @@ export class EventsGateway {
 
   async getMessages() {
     // @ts-ignore
-    this.server.emit('getMessages', await this.reqAppService.getAllRequest());
+    this.server.emit('getMessages', await this.quoteService.getAllQuotes());
   }
 }

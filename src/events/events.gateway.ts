@@ -22,6 +22,11 @@ export class EventsGateway {
 
   async getMessages() {
     // @ts-ignore
-    this.server.emit('getMessages', await this.quoteService.getAllQuotes());
+    let items = await this.quoteService.getAllQuotes();
+    // @ts-ignore
+    for (let i = 0; i < items.length; i++) {
+      this.server.emit('get-messages/{'+items[i].id+'}', this.quoteService.getQuoteById(String(items[i].id)));
+    }
+
   }
 }

@@ -1,26 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
-import { QuoteService } from '../quote/quote.service';
+import {Injectable} from "@nestjs/common";
+import {PrismaService} from "../../prisma/prisma.service";
+import {Prisma} from "@prisma/client";
+import {QuoteService} from "../quote/quote.service";
+import {DefaultArgs, GetResult} from "@prisma/client/runtime/library";
 
 @Injectable()
-export class EventService {
-  constructor(
-    private prismaService: PrismaService,
-    private quoteService: QuoteService,
-  ) {}
+export class EventService{
+    constructor(private prismaService : PrismaService, private quoteService : QuoteService) {
+    }
 
-  async setAmountByQuote(data: {
-      quote: {
-          connect: Prisma.Prisma__QuoteClient<GetResult<Prisma.$QuotePayload<DefaultArgs>, {
-              include: { events: boolean };
-              where: { id: number }
-          }, "findFirst"> | null, null, DefaultArgs>
-      };
-      name: string
-  }) {
-    return this.prismaService.event.create({
-      data,
-    });
-  }
+    async setAmountByQuote(data: Prisma.EventCreateInput) {
+        return this.prismaService.event.create({
+            data,
+        });
+    }
 }

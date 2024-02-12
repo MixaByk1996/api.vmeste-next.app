@@ -14,19 +14,21 @@ export class EventController {
   ) {}
 
   @Post('/create')
-  @ApiBody({ description: 'Добавление события в заявку', type: CreateEventDto })
-  async createEventByQuote(@Body() createEventDto: CreateEventDto) {
+  @ApiBody({description: "Добавление события в заявку", type : CreateEventDto})
+  async createEventByQuote(
+      @Body() createEventDto : CreateEventDto
+  ){
     const name = createEventDto.name;
-    const quote = await this.quoteService.getQuoteById(createEventDto.quote_id);
-    if (!quote) {
-      throw new BadRequestException('Заявка не найдена!');
+    let quote = await this.quoteService.getQuoteById(createEventDto.quote_id);
+    if(!quote){
+      throw new BadRequestException("Заявка не найдена!");
     }
-    // @ts-ignore
+
     return this.eventService.setAmountByQuote({
       name,
-      quote: {
-        connect: quote,
-      },
-    });
+      quote :{
+        connect: quote
+      }
+    })
   }
 }

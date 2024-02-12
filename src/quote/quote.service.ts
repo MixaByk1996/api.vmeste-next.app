@@ -99,14 +99,14 @@ export class QuoteService {
     });
   }
 
-  async getQuoteById(id: string) {
+  async getQuoteById(id: string): Promise<Quote> {
     return this.prismaService.quote.findFirst({
       where: { id: Number(id) },
       include:{
         events: true,
-
+        messages: true,
       }
-    });
+    }) ;
   }
   async quotes(user_id: number) {
     return this.prismaService.quote.findMany({

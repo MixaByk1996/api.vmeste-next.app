@@ -106,7 +106,7 @@ export class MessageController {
   ) {
     const user = request['user'];
     const text = createMessage.text;
-    const quote = await this.quoteService.getQuoteById(createMessage.text);
+    const quote = await this.quoteService.getQuoteById(createMessage.quote_id);
     if (!quote) {
       throw new BadRequestException('Заявка не найдена!');
     }
@@ -117,7 +117,7 @@ export class MessageController {
         connect: await this.userService.findUser({ id: user.id }),
       },
       quote: {
-        connect: quote,
+        connect: await this.quoteService.getQuoteById(createMessage.quote_id),
       },
     });
   }
